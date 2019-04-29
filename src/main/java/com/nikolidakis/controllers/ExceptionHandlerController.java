@@ -71,8 +71,8 @@ public class ExceptionHandlerController {
     //##################################### CUSTOM EXCEPTIONS ##############################################################
     //UserException Exception
     @ExceptionHandler
-    public ResponseEntity<Response> invalidUsernameException(UserException exception) throws JsonProcessingException {
-        ErrorResponse omResponse = new ErrorResponse(USER_EXCEPTION, exception.getMessage());
+    public ResponseEntity<Response> userException(UserException exception) throws JsonProcessingException {
+        ErrorResponse omResponse = new ErrorResponse(CLIENT_ERROR, exception.getMessage());
         log.info("Returning output: {}", jsonMapper.writeValueAsString(omResponse));
         return new ResponseEntity<>(omResponse, HttpStatus.BAD_REQUEST);
     }

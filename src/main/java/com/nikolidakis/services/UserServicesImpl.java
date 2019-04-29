@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.nikolidakis.models.constants.LogConstants.*;
+import static com.nikolidakis.utils.Utils.md5;
 import static java.util.Objects.isNull;
 
 @Service
@@ -25,8 +26,7 @@ public class UserServicesImpl implements UserServices {
     private final UserRepository repository;
 
     //Find all the users
-    @Override
-    public List<User> getAllUsers() {
+    private List<User> getAllUsers() {
         return repository.findAll();
     }
 
@@ -55,7 +55,7 @@ public class UserServicesImpl implements UserServices {
 
     //Find all the users
     @Override
-    public boolean authenticateUser(AuthenticateUserRequest request) throws AuthenticateException {
+    public String getToken(AuthenticateUserRequest request) throws AuthenticateException {
 
         log.info(USER_SERVICE + AUTHENTICATE_USER + "Ready to call the DB to authenticate the user");
         User user = repository.findByUsernameAndPassword(request.getUsername(), request.getPassword());
@@ -65,9 +65,27 @@ public class UserServicesImpl implements UserServices {
         }
 
         log.info(USER_SERVICE + AUTHENTICATE_USER + "Authentication was successful ");
-        return true;
 
-
+        //i create the token from the concatenation of the username and password
+        String token = md5(user.getUsername() + user.getPassword());
+        return token;
     }
+
+    @Override
+    public User findUserByToken(String token) throws AuthenticateException {
+        List<User> users = getAllUsers();
+
+        for (User currentUser : users) {
+            String userToken = md5(currentUser.getUsername() + currentUser.getPassword());
+            if (token.equals(userToken)) {
+                log.info(USER_SERVICE + "Method findUserByToken > Token is ok ! The user is :" + currentUser.getUsername());
+                return currentUser;
+            }
+        }
+
+        log.error(USER_SERVICE + "Method findUserByToken > Wrong token");
+        throw new AuthenticateException("Incorrect token !");
+    }
+
 
 }

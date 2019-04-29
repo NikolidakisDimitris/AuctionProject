@@ -1,38 +1,39 @@
-//package com.nikolidakis.services;
-//
-//import com.nikolidakis.models.User;
-//import com.nikolidakis.repository.UserRepository;
-//import org.junit.Before;
-//import org.junit.Test;
-//
-//import java.util.List;
-//
-//import static org.junit.Assert.*;
-//
-//public class UserServicesImplTest {
-//
-//    private UserRepository dao;
-//    private UserServices service;
-//
-//    @Before
-//    public void init(){
-//        service = new UserServicesImpl();
-//    }
-//
-//    @Test
-//    public void getUsers(){
-//        List<User> users = service.getAllUsers();
-//        System.out.println(users);
-//
-//    }
-//
-//
-//    @Test
-//    public void getUserByIdOrEmail(){
-//        String email = "nikolidakis.dimitris@gmail.com";
-//        System.out.println(service.getUserByIdOrEmail(email));
-//
-//    }
-//
-//
-//}
+package com.nikolidakis.services;
+
+import com.nikolidakis.exceptions.AuthenticateException;
+import com.nikolidakis.repository.UserRepository;
+import com.nikolidakis.requests.AuthenticateUserRequest;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.junit4.SpringRunner;
+
+@RunWith(SpringRunner.class)
+@DataJpaTest
+public class UserServicesImplTest {
+
+    @Autowired
+    private UserRepository dao;
+    @Autowired
+    private UserServices service;
+
+
+    @Autowired
+    private TestEntityManager entityManager;
+
+
+    @Test
+    public void getToken_Success() throws AuthenticateException {
+        String username = "tasos kopanos";
+        String pass = "1234";
+        AuthenticateUserRequest request = new AuthenticateUserRequest(username, pass);
+        String token = service.getToken(request);
+
+        System.out.println(token);
+
+    }
+
+
+}

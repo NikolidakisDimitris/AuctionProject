@@ -10,7 +10,7 @@ public class LogConstants {
     //Constants for the User System
     public static final String REGISTER_NEW_USER = "Method registerNewUser > ";
     public static final String USER_CONTROLER = "UserController > ";
-    public static final String AUTHENTICATE_USER = "ethod authenticateUser > ";
+    public static final String AUTHENTICATE_USER = "Method getToken > ";
 
 
     //General Errors

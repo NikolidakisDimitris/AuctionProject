@@ -6,13 +6,12 @@ import com.nikolidakis.models.User;
 import com.nikolidakis.requests.AuthenticateUserRequest;
 import com.nikolidakis.requests.RegisterNewUserRequest;
 
-import java.util.List;
-
 public interface UserServices {
 
-    boolean authenticateUser(AuthenticateUserRequest request) throws AuthenticateException;
-
-    List<User> getAllUsers();
+    String getToken(AuthenticateUserRequest request) throws AuthenticateException;
 
     void registerNewUser(RegisterNewUserRequest request) throws UserException;
+
+    User findUserByToken(String token) throws AuthenticateException;
+
 }

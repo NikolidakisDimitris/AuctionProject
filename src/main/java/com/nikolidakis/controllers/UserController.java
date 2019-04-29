@@ -4,7 +4,6 @@ import com.nikolidakis.exceptions.AuthenticateException;
 import com.nikolidakis.exceptions.UserException;
 import com.nikolidakis.requests.AuthenticateUserRequest;
 import com.nikolidakis.requests.RegisterNewUserRequest;
-import com.nikolidakis.responses.AllUsersResponse;
 import com.nikolidakis.responses.AuthenticationResponse;
 import com.nikolidakis.responses.Response;
 import com.nikolidakis.services.UserServices;
@@ -32,10 +31,10 @@ public class UserController {
     private UserServices services;
 
     //    Just for testing reasons
-    @RequestMapping("/allusers")
-    public Response getAllUsers() {
-        return new AllUsersResponse(SUCCESS, "All users found", services.getAllUsers());
-    }
+//    @RequestMapping("/allusers")
+//    public Response getAllUsers() {
+//        return new AllUsersResponse(SUCCESS, "All users found", services.getAllUsers());
+//    }
 
     @PostMapping(value = "/registernewuser",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -45,17 +44,16 @@ public class UserController {
         services.registerNewUser(request);
         log.info(USER_CONTROLER + "Successful registration of user ");
         return new Response(SUCCESS, "User Registered successfully");
-
     }
 
     @PostMapping(value = "/authenticateuser",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Response authenticateUser(@Valid @RequestBody AuthenticateUserRequest request) throws AuthenticateException {
-        log.info(USER_CONTROLER + "Method authenticateUser");
-        boolean result = services.authenticateUser(request);
+        log.info(USER_CONTROLER + "Method getToken");
+        String token = services.getToken(request);
         log.info(USER_CONTROLER + "Authentication was successful");
-        return new AuthenticationResponse(SUCCESS, "Authenticated User OK", result);
+        return new AuthenticationResponse(SUCCESS, "Authenticated User OK", token);
 
     }
 
