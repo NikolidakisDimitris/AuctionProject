@@ -2,6 +2,7 @@ package com.nikolidakis.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nikolidakis.exceptions.AuctionException;
 import com.nikolidakis.exceptions.AuthenticateException;
 import com.nikolidakis.exceptions.UserException;
 import com.nikolidakis.responses.ErrorResponse;
@@ -83,6 +84,14 @@ public class ExceptionHandlerController {
         ErrorResponse omResponse = new ErrorResponse(AUTHENTICATION_FAILED, exception.getMessage());
         log.info("Returning output: {}", jsonMapper.writeValueAsString(omResponse));
         return new ResponseEntity<>(omResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    //AuctionException
+    @ExceptionHandler
+    public ResponseEntity<Response> auctionException(AuctionException exception) throws JsonProcessingException {
+        ErrorResponse omResponse = new ErrorResponse(AUCTION_EXCEPTION, exception.getMessage());
+        log.info("Returning output: {}", jsonMapper.writeValueAsString(omResponse));
+        return new ResponseEntity<>(omResponse, HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE);
     }
 
 

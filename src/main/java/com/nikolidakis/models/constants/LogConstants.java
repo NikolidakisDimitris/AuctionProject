@@ -12,6 +12,10 @@ public class LogConstants {
     public static final String USER_CONTROLER = "UserController > ";
     public static final String AUTHENTICATE_USER = "Method getToken > ";
 
+    //Constants for the Auction
+    public static final String AUCTION_CONTROLLER = "AuctionController > ";
+    public static final String GET_ALL_AUCTIONS = "Method getAllAuctions > ";
+
 
     //General Errors
     public static final String CLIENTERROR = "Request is not valid.";
