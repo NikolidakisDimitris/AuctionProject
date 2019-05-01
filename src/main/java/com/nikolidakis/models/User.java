@@ -18,57 +18,57 @@ import static com.nikolidakis.utils.Utils.md5;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "UserID")
+    @Column(name = "user_id")
     Long id; // primary key
 
-    @Column(name = "Username")
+    @Column(name = "username")
     @NotBlank
     @Size(max = 30)
     private String username; //unique
 
-    @Column(name = "Password")
+    @Column(name = "password")
     @NotBlank
     @Size(max = 512)
     private String password;
 
-    @Column(name = "Firstname")
+    @Column(name = "firstname")
     @NotBlank
     @Size(max = 30)
     private String firstName;
 
-    @Column(name = "Lastname")
+    @Column(name = "lastname")
     @NotBlank
     @Size(max = 30)
     private String lastName;
 
-    @Column(name = "Email")
+    @Column(name = "email")
     @NotBlank
     @Email
     @Size(max = 30)
     private String email;
 
-    @Column(name = "Phone")
+    @Column(name = "phone")
     @NotBlank
     @Pattern(regexp = "^(0|[1-9][0-9]*)$")
     @Size(max = 15)
     private String phone;
 
-    @Column(name = "Country")
+    @Column(name = "country")
     @NotBlank
     @Size(max = 30)
     private String country;
 
-    @Column(name = "City")
+    @Column(name = "city")
     @NotBlank
     @Size(max = 30)
     private String city;
 
-    @Column(name = "Address")
+    @Column(name = "address")
     @NotBlank
     @Size(max = 50)
     private String address;
 
-    @Column(name = "AFM")
+    @Column(name = "afm")
     @NotBlank
     @Size(max = 30)
     private String afm;

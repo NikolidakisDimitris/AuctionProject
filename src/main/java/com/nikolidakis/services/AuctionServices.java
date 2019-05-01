@@ -8,4 +8,6 @@ import java.util.List;
 public interface AuctionServices {
 
     List<Auction> getAllAuctions() throws AuctionException;
+
+    List<Auction> getOpenAuctions() throws AuctionException;
 }

@@ -1,5 +1,6 @@
 package com.nikolidakis.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,6 +13,7 @@ import javax.validation.constraints.Size;
 @Table(name = "Auctions")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Auction {
 
     @Id
@@ -24,20 +26,18 @@ public class Auction {
     @Size(max = 30)
     String nameOfItem;
 
-    @Column(name = "seller_id")
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "SellerId")
-    @NotBlank
-    Long seller; //matchItById Get token, find user, get Id
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "seller_id", referencedColumnName = "user_id")
+    User seller; //matchItById Get token, find user, get Id
 
     @Column(name = "started_time")
     @NotBlank
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'hh:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm")
     String startedTime;
 
     @Column(name = "ending_time")
     @NotBlank
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'hh:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm")
     String endingTime;
 
     @Column(name = "item_description")

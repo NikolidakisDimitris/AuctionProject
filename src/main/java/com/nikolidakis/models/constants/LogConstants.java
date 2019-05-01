@@ -15,6 +15,8 @@ public class LogConstants {
     //Constants for the Auction
     public static final String AUCTION_CONTROLLER = "AuctionController > ";
     public static final String GET_ALL_AUCTIONS = "Method getAllAuctions > ";
+    public static final String GET_OPEN_AUCTIONS = "Method getOpenAuctions > ";
+    public static final String AUCTION_REPOSITORY_CUSTOM_IMPL = "AuctionRepositoryCustomImpl > ";
 
 
     //General Errors
