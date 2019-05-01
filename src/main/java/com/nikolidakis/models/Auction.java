@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @Table(name = "Auctions")
@@ -25,6 +26,10 @@ public class Auction {
     @NotBlank
     @Size(max = 30)
     String nameOfItem;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "auction_item_id")
+    List<ItemCategory> categories;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "seller_id", referencedColumnName = "user_id")
@@ -55,8 +60,9 @@ public class Auction {
     @Size(max = 30)
     String itemCountry;
 
-
-//    List<Bid> bids; //fetch it from another table
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "auction_item_id")
+    List<Bid> bids; //fetch it from another table
 
 
 }

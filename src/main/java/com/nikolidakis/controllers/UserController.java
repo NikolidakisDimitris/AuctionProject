@@ -28,7 +28,7 @@ import static com.nikolidakis.models.constants.StatusCodes.SUCCESS;
 public class UserController {
 
     @Autowired
-    private UserServices services;
+    private final UserServices services;
 
     //    Just for testing reasons
 //    @RequestMapping("/allusers")
