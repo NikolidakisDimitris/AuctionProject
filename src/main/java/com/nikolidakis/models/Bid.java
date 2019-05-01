@@ -17,15 +17,12 @@ public class Bid {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "bid_id")
-    Long id;
+    Long bid_id;
 
-    @Column(name = "auction_item_id")
-    @NotBlank
-    Long itemId;
-
-//    @Column(name = "bidder_id")
+//    @Column(name = "auction_item_id")
 //    @NotBlank
-//    Long bidderId;
+//    Long bid_itemId;
+
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bidder_id", referencedColumnName = "user_id")

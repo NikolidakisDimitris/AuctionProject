@@ -1,5 +1,6 @@
 package com.nikolidakis.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
+    @JsonIgnore(value = true)
     Long id; // primary key
 
     @Column(name = "username")
@@ -29,48 +31,57 @@ public class User {
     @Column(name = "password")
     @NotBlank
     @Size(max = 512)
+    @JsonIgnore(value = true)
     private String password;
 
     @Column(name = "firstname")
     @NotBlank
     @Size(max = 30)
+    @JsonIgnore(value = true)
     private String firstName;
 
     @Column(name = "lastname")
     @NotBlank
     @Size(max = 30)
+    @JsonIgnore(value = true)
     private String lastName;
 
     @Column(name = "email")
     @NotBlank
     @Email
     @Size(max = 30)
+    @JsonIgnore(value = true)
     private String email;
 
     @Column(name = "phone")
     @NotBlank
     @Pattern(regexp = "^(0|[1-9][0-9]*)$")
     @Size(max = 15)
+    @JsonIgnore(value = true)
     private String phone;
 
     @Column(name = "country")
     @NotBlank
     @Size(max = 30)
+    @JsonIgnore(value = true)
     private String country;
 
     @Column(name = "city")
     @NotBlank
     @Size(max = 30)
+    @JsonIgnore(value = true)
     private String city;
 
     @Column(name = "address")
     @NotBlank
     @Size(max = 50)
+    @JsonIgnore(value = true)
     private String address;
 
     @Column(name = "afm")
     @NotBlank
     @Size(max = 30)
+    @JsonIgnore(value = true)
     private String afm;
 
     public User(Long id, @NotBlank @Size(max = 30) String username, @NotBlank @Size(max = 512) String password,
