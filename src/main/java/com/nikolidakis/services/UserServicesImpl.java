@@ -25,31 +25,28 @@ public class UserServicesImpl implements UserServices {
     @Autowired
     private final UserRepository repository;
 
-    //Find all the users
-    private List<User> getAllUsers() {
-        return repository.findAll();
-    }
 
     //Register a new User
     @Override
     public void registerNewUser(RegisterNewUserRequest request) throws UserException {
         //search the DB for this username
         log.info(USER_SERVICE + REGISTER_NEW_USER + "Ready to call the DB to check is the username {} exists",
-                request.getUser().getUsername());
-        User user = repository.findByUsername(request.getUser().getUsername());
+                request.getUsername());
 
-        //If there is already a user with this username ->UserException
-        if (!isNull(user)) {
-            log.error(USER_SERVICE + REGISTER_NEW_USER + "The userName already exists");
-            throw new UserException("This name is already taken");
+        //Check if the username already exists, and not , only then save it, else throw exception
+        boolean usernameExists = repository.existsByUsername(request.getUsername());
+
+        if (usernameExists) {
+            log.error(USER_SERVICE + REGISTER_NEW_USER + "The userName {} already exists", request.getUsername());
+            throw new UserException("The name is already taken");
         }
 
-        //If the user gives an id for any reason apart from null -> UserException
-        if (!isNull(request.getUser().getId())) {
-            log.error(USER_SERVICE + REGISTER_NEW_USER + "The id is specified by the database, wrong input");
-            throw new UserException("You Should not give the id");
-        }
-        User registerNewUser = repository.save(request.getUser());
+        User user = new User(null, request.getUsername(), request.getPassword(), request.getFirstName(),
+                request.getLastName(), request.getEmail(), request.getPhone(), request.getCountry(), request.getCity(),
+                request.getAddress(), request.getAfm());
+
+        User registerNewUser = repository.save(user);
+        System.out.println("edoden eftase");
         log.info(USER_SERVICE + REGISTER_NEW_USER + "saved successfully");
     }
 
@@ -73,19 +70,23 @@ public class UserServicesImpl implements UserServices {
 
     @Override
     public User findUserByToken(String token) throws AuthenticateException {
-        List<User> users = getAllUsers();
+        List<User> users = repository.findAll();
+
+        if (isNull(token)) {
+            log.error(USER_SERVICE + FIND_USER_BY_TOKEN + "null token");
+            throw new AuthenticateException("The token is null");
+        }
 
         for (User currentUser : users) {
-            String userToken = md5(currentUser.getUsername() + currentUser.getPassword());
-            if (token.equals(userToken)) {
-                log.info(USER_SERVICE + "Method findUserByToken > Token is ok ! The user is :" + currentUser.getUsername());
+            String currentUserToken = md5(currentUser.getUsername() + currentUser.getPassword());
+
+            if (token.equals(currentUserToken)) {
+                log.info(USER_SERVICE + FIND_USER_BY_TOKEN + "Token is ok ! The user is :" + currentUser.getUsername());
                 return currentUser;
             }
         }
 
-        log.error(USER_SERVICE + "Method findUserByToken > Wrong token");
+        log.error(USER_SERVICE + FIND_USER_BY_TOKEN + "Wrong token");
         throw new AuthenticateException("Incorrect token !");
     }
-
-
 }

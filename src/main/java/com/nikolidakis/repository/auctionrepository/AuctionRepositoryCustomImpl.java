@@ -1,4 +1,4 @@
-package com.nikolidakis.repository;
+package com.nikolidakis.repository.auctionrepository;
 
 import com.nikolidakis.models.Auction;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
+import static com.nikolidakis.models.constants.DataBaseConstants.DATABASE;
 import static com.nikolidakis.models.constants.LogConstants.AUCTION_REPOSITORY_CUSTOM_IMPL;
 import static com.nikolidakis.models.constants.LogConstants.GET_OPEN_AUCTIONS;
 
@@ -47,7 +48,7 @@ public class AuctionRepositoryCustomImpl implements AuctionRepositoryCustom {
         TypedQuery query = (TypedQuery) entityManager.createNativeQuery("\n" +
                 "SELECT Auctions.*, Users.username \n" +
                 "FROM testDB.Auctions\n" +
-                "inner join testDB.Users on Users.user_id = Auctions.seller_id;", Auction.class);
+                "inner join " + DATABASE + ".Users on Users.user_id = Auctions.seller_id;", Auction.class);
 
         return query.getResultList();
     }

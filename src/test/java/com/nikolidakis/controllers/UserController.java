@@ -13,10 +13,10 @@ public class UserController extends MockMVSClass {
     @Test
     public void authenticateUser_Success() throws Exception {
         String EXPECTED = jsonMapper.writeValueAsString(new AuthenticationResponse(SUCCESS,
-                "Authenticated User OK", "81DC9BDB52D04DC20036DBD8313ED055"));
+                "Authenticated User OK", "571687C4180C019EE85FC0A33B829E04"));
 
         AuthenticateUserRequest request = new AuthenticateUserRequest("tasos kopanos", "1234");
-        String ACTUAL = getMvcResult("/users/authenticateuser", request).getResponse().getContentAsString();
+        String ACTUAL = getMvcResult("http://localhost:8080/users/authenticateuser", request).getResponse().getContentAsString();
 
         assertEquals(EXPECTED, ACTUAL);
     }

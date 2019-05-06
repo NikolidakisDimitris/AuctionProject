@@ -1,4 +1,4 @@
-package com.nikolidakis.repository;
+package com.nikolidakis.repository.auctionrepository;
 
 import com.nikolidakis.models.Auction;
 

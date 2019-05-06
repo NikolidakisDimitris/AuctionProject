@@ -7,10 +7,12 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
-@Table(name = "Categories")
+@Table(name = "Categories", uniqueConstraints = {@UniqueConstraint(columnNames = {"categoryName"})})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,15 +22,14 @@ public class ItemCategory {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "category_id")
     @JsonIgnore(value = true)
-    Long id;
+    Long categoryId;
 
-    @Column(name = "category")
+    @Column(name = "categoryName")
     @NotBlank
-    String category;
+    String categoryName;
 
-    @Column(name = "auction_item_id")
-    @NotBlank
     @JsonIgnore(value = true)
-    Long itemId;
+    @ManyToMany(mappedBy = "categories")
+    Set<Auction> auctions = new HashSet<>();
 
 }

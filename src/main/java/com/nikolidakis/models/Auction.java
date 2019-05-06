@@ -8,7 +8,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Auctions")
@@ -27,9 +29,9 @@ public class Auction {
     @Size(max = 30)
     String nameOfItem;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "auction_item_id")
-    List<ItemCategory> categories;
+//    @OneToMany(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "auction_item_id")
+//    List<ItemCategory> categories;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "seller_id", referencedColumnName = "user_id")
@@ -63,6 +65,17 @@ public class Auction {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "auction_item_id")
     List<Bid> bids; //fetch it from another table
+
+    //TODO: WARNING  !!!!! need to change it somehow to updata both tables. Neeed to check the new category method, and
+    // the
+    // new
+    // Auction method
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "Auctions_Categories",
+            joinColumns = {@JoinColumn(name = "auction_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id")})
+    Set<ItemCategory> categories = new HashSet<>();
 
 
 }

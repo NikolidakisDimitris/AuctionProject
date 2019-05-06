@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nikolidakis.exceptions.AuctionException;
 import com.nikolidakis.exceptions.AuthenticateException;
+import com.nikolidakis.exceptions.ItemCategoryException;
 import com.nikolidakis.exceptions.UserException;
 import com.nikolidakis.responses.ErrorResponse;
 import com.nikolidakis.responses.Response;
@@ -94,5 +95,12 @@ public class ExceptionHandlerController {
         return new ResponseEntity<>(omResponse, HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE);
     }
 
+    //AuctionException
+    @ExceptionHandler
+    public ResponseEntity<Response> itemCategoryException(ItemCategoryException exception) throws JsonProcessingException {
+        ErrorResponse omResponse = new ErrorResponse(ITEM_CATEGORY_EXCEPTION, exception.getMessage());
+        log.info("Returning output: {}", jsonMapper.writeValueAsString(omResponse));
+        return new ResponseEntity<>(omResponse, HttpStatus.BAD_REQUEST);
+    }
 
 }
