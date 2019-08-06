@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Just give a bid
+ */
+
 @RestController
 @RequestMapping("/bids")
 @Data

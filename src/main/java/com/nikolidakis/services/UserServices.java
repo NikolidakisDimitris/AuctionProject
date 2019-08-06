@@ -6,7 +6,11 @@ import com.nikolidakis.models.User;
 import com.nikolidakis.requests.AuthenticateUserRequest;
 import com.nikolidakis.requests.RegisterNewUserRequest;
 
+import java.util.List;
+
 public interface UserServices {
+
+    List<User> getAllUser();
 
     String getToken(AuthenticateUserRequest request) throws AuthenticateException;
 

@@ -4,6 +4,7 @@ import com.nikolidakis.exceptions.AuthenticateException;
 import com.nikolidakis.exceptions.UserException;
 import com.nikolidakis.requests.AuthenticateUserRequest;
 import com.nikolidakis.requests.RegisterNewUserRequest;
+import com.nikolidakis.responses.AllUsersResponse;
 import com.nikolidakis.responses.AuthenticationResponse;
 import com.nikolidakis.responses.Response;
 import com.nikolidakis.services.UserServices;
@@ -11,15 +12,17 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 import static com.nikolidakis.models.constants.LogConstants.USER_CONTROLER;
 import static com.nikolidakis.models.constants.StatusCodes.SUCCESS;
+
+/**
+ * Should have : new user Method, delete a user (not sure), getToken (authenticate the user )
+ */
+
 
 @RestController
 @RequestMapping("/users")
@@ -31,10 +34,11 @@ public class UserController {
     private final UserServices services;
 
     //    Just for testing reasons
-//    @RequestMapping("/allusers")
-//    public Response getAllUsers() {
-//        return new AllUsersResponse(SUCCESS, "All users found", services.getAllUsers());
-//    }
+    @RequestMapping(value = "/allusers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response getAllUsers() {
+        AllUsersResponse response = new AllUsersResponse(SUCCESS, "All users found", services.getAllUser());
+        return response;
+    }
 
     @PostMapping(value = "/registernewuser",
             consumes = MediaType.APPLICATION_JSON_VALUE,

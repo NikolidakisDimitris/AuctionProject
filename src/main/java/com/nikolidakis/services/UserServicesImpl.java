@@ -25,6 +25,19 @@ public class UserServicesImpl implements UserServices {
     @Autowired
     private final UserRepository repository;
 
+    @Override
+    public List<User> getAllUser() {
+
+        List<User> users = repository.findAll();
+//        for (User current : users){
+//            System.out.println(current);
+//            System.out.println(current.getUsername() +"   "+ current.getPassword());
+//
+//        }
+//        System.out.println(users);
+        return users;
+    }
+
 
     //Register a new User
     @Override
@@ -45,17 +58,19 @@ public class UserServicesImpl implements UserServices {
                 request.getLastName(), request.getEmail(), request.getPhone(), request.getCountry(), request.getCity(),
                 request.getAddress(), request.getAfm());
 
+        //save to the DB the new user
         User registerNewUser = repository.save(user);
-        System.out.println("edoden eftase");
-        log.info(USER_SERVICE + REGISTER_NEW_USER + "saved successfully");
+        log.info(USER_SERVICE + REGISTER_NEW_USER + " User " + registerNewUser.getUsername() + "saved successfully");
     }
 
     //Find all the users
     @Override
     public String getToken(AuthenticateUserRequest request) throws AuthenticateException {
+        System.out.println(md5(request.getPassword()));
 
         log.info(USER_SERVICE + AUTHENTICATE_USER + "Ready to call the DB to authenticate the user");
         User user = repository.findByUsernameAndPassword(request.getUsername(), request.getPassword());
+        System.out.println(user);
         if (isNull(user)) {
             log.error(USER_SERVICE + AUTHENTICATE_USER + "There is no such user");
             throw new AuthenticateException("Not Authenticated User");

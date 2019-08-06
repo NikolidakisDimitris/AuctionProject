@@ -5,10 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 import static com.nikolidakis.utils.Utils.md5;
 
@@ -31,58 +28,59 @@ public class User {
     @Column(name = "password")
     @NotBlank
     @Size(max = 512)
-    @JsonIgnore(value = true)
     private String password;
 
     @Column(name = "firstname")
     @NotBlank
     @Size(max = 30)
-    @JsonIgnore(value = true)
     private String firstName;
 
     @Column(name = "lastname")
     @NotBlank
     @Size(max = 30)
-    @JsonIgnore(value = true)
     private String lastName;
 
     @Column(name = "email")
     @NotBlank
     @Email
     @Size(max = 30)
-    @JsonIgnore(value = true)
     private String email;
 
     @Column(name = "phone")
     @NotBlank
     @Pattern(regexp = "^(0|[1-9][0-9]*)$")
     @Size(max = 15)
-    @JsonIgnore(value = true)
     private String phone;
 
     @Column(name = "country")
     @NotBlank
     @Size(max = 30)
-    @JsonIgnore(value = true)
     private String country;
 
     @Column(name = "city")
     @NotBlank
     @Size(max = 30)
-    @JsonIgnore(value = true)
     private String city;
 
     @Column(name = "address")
     @NotBlank
     @Size(max = 50)
-    @JsonIgnore(value = true)
     private String address;
 
     @Column(name = "afm")
     @NotBlank
     @Size(max = 30)
-    @JsonIgnore(value = true)
     private String afm;
+
+    @Column(name = "bidder_rating")
+    @Min(0)
+    @Max(5)
+    private int bidderRating;
+
+    @Column(name = "sellerRating")
+    @Min(0)
+    @Max(5)
+    private int sellerRating;
 
     public User(Long id, @NotBlank @Size(max = 30) String username, @NotBlank @Size(max = 512) String password,
                 @NotBlank @Size(max = 30) String firstName, @NotBlank @Size(max = 30) String lastName,

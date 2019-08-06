@@ -14,9 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static com.nikolidakis.models.constants.LogConstants.*;
 import static java.util.Objects.isNull;
@@ -81,35 +80,31 @@ public class AuctionServicesImpl implements AuctionServices {
 //        }
 
         //create the categories List
-        Set<ItemCategory> categories = new HashSet<>();
+//        List<ItemCategory> categories = new HashSet<>();
+//
+//        for (String currentCategory : request.getCategories()) {
+//            ItemCategory category = new ItemCategory(null, currentCategory, null);
+//            categories.add(category);
+//        }
 
-        for (String currentCategory : request.getCategories()) {
-            ItemCategory category = new ItemCategory(null, currentCategory, null);
-        }
 
-
-        //cretate the auction item
+        //cretate the auction item, in order to save it in the database
         Auction auction = new Auction(null, request.getNameOfItem(), user, request.getStartedTime(),
                 request.getEndingTime(), request.getItemDescription(), request.getItemLocation(),
-                request.getItemCountry(), null, categories);
+                request.getItemCountry(), null, new ArrayList<ItemCategory>());
 
+        ArrayList<Auction> auctions = new ArrayList<>();
+        auctions.add(auction);
 
-        //create the new auction object, in order to save it in the database
-//        Auction auction = new Auction(null, request.getNameOfItem(), categories, user, request.getStartedTime(),
-//                request.getEndingTime(), request.getItemDescription(), request.getItemLocation(),
-//                request.getItemCountry(), null);
+        for (String currentCategory : request.getCategories()) {
+            ItemCategory category = new ItemCategory(null, currentCategory, auctions);
+            auction.getCategories().add(category);
 
+        }
 
         // save the new auction to the database
         Auction newAuction = auctionRepository.save(auction);
         log.info(AUCTION_SERVICES + NEW_AUCTION + " Auction registered successfully");
-
-
-        //now need to save to the database the categories
-//        for (ItemCategory currentCategory : categories) {
-//            currentCategory.setCategoryId(auction.getId());
-//            ItemCategory category = itemCategoryRepository.save(currentCategory);
-//        }
     }
 
 }

@@ -26,6 +26,7 @@ public class LogConstants {
     public static final String CATEGORIES_SERVICES = "ItemCategoriesServices > ";
     public static final String CATEGORIES_CONTROLLER = "ItemCategoriesController > ";
     public static final String ADD_CATEGORY = " Method Add category > ";
+    public static final String GET_CATEGORY = " Method Get category > ";
 
 
     //General Errors

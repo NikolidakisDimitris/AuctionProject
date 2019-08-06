@@ -46,6 +46,4 @@ public class NewAuctionRequest {
     @Size(max = 30)
     private String itemCountry;
 
-//    @NotBlank
-//    private Auction auction;
 }

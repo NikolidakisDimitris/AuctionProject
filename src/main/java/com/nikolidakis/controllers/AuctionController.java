@@ -23,6 +23,10 @@ import java.util.List;
 import static com.nikolidakis.models.constants.LogConstants.*;
 import static com.nikolidakis.models.constants.StatusCodes.SUCCESS;
 
+
+/**
+ * New auction, delete an auction,
+ */
 @RestController
 @RequestMapping("/auctions")
 @Data

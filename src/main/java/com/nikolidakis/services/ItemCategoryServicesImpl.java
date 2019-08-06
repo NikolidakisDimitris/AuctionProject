@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static java.util.Objects.isNull;
 
 @Service
@@ -27,15 +29,18 @@ public class ItemCategoryServicesImpl implements ItemCategoryServices {
         }
 
         //find if this category already exists in the database
-        boolean categoryExists = repository.existsByCategoryName(categoryName);
+        boolean categoryExists = repository.existsByCategoryName(categoryName.toLowerCase());
 
         //if this category exists in the database then return Exception , else save it in the database
         if (categoryExists) {
             throw new ItemCategoryException("This category already exists ");
         }
 
-        ItemCategory category = repository.save(new ItemCategory(null, categoryName, null));
+        ItemCategory category = repository.save(new ItemCategory(null, categoryName.toLowerCase()));
+    }
 
+    public List<ItemCategory> findAllCategories() {
+        return repository.findAll();
     }
 
 }
