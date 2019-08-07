@@ -8,7 +8,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Auctions")
@@ -26,10 +28,6 @@ public class Auction {
     @NotBlank
     @Size(max = 30)
     String nameOfItem;
-
-//    @OneToMany(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "auction_item_id")
-//    List<ItemCategory> categories;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "seller_id", referencedColumnName = "user_id")
@@ -67,8 +65,9 @@ public class Auction {
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
             name = "auctions_categories",
-            joinColumns = {@JoinColumn(name = "category_id")},
-            inverseJoinColumns = {@JoinColumn(name = "auction_id")})
-    List<ItemCategory> categories;
+            joinColumns = {@JoinColumn(name = "auction_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id")})
+    Set<ItemCategory> categories = new HashSet<>();
+
 
 }

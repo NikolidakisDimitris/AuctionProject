@@ -18,7 +18,7 @@ public class BidServicesImpl implements BidServices {
     private final BidRepository repository;
 
     public List<Bid> getBids() {
-        return repository.findAll();
+        return (List<Bid>) repository.findAll();
 
     }
 }

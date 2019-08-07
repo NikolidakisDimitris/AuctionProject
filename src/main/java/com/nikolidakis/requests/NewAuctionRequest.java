@@ -1,5 +1,6 @@
 package com.nikolidakis.requests;
 
+import com.nikolidakis.models.ItemCategory;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -7,7 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -22,7 +23,7 @@ public class NewAuctionRequest {
     private String nameOfItem;
 
     @NotNull
-    private List<String> categories;
+    private Set<ItemCategory> categories;
 
     @NotNull
     @NotBlank

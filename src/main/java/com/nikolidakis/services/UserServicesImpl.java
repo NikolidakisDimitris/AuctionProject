@@ -28,13 +28,7 @@ public class UserServicesImpl implements UserServices {
     @Override
     public List<User> getAllUser() {
 
-        List<User> users = repository.findAll();
-//        for (User current : users){
-//            System.out.println(current);
-//            System.out.println(current.getUsername() +"   "+ current.getPassword());
-//
-//        }
-//        System.out.println(users);
+        List<User> users = (List<User>) repository.findAll();
         return users;
     }
 
@@ -85,7 +79,7 @@ public class UserServicesImpl implements UserServices {
 
     @Override
     public User findUserByToken(String token) throws AuthenticateException {
-        List<User> users = repository.findAll();
+        List<User> users = (List<User>) repository.findAll();
 
         if (isNull(token)) {
             log.error(USER_SERVICE + FIND_USER_BY_TOKEN + "null token");

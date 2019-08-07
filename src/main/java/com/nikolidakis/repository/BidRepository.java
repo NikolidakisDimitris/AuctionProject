@@ -1,7 +1,7 @@
 package com.nikolidakis.repository;
 
 import com.nikolidakis.models.Bid;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface BidRepository extends JpaRepository<Bid, Long> {
+public interface BidRepository extends CrudRepository<Bid, Long> {
 }

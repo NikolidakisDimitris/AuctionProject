@@ -40,7 +40,7 @@ public class ItemCategoryServicesImpl implements ItemCategoryServices {
     }
 
     public List<ItemCategory> findAllCategories() {
-        return repository.findAll();
+        return (List<ItemCategory>) repository.findAll();
     }
 
 }

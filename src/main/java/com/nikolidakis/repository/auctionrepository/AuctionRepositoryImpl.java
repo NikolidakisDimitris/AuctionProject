@@ -1,9 +1,9 @@
 package com.nikolidakis.repository.auctionrepository;
 
 import com.nikolidakis.models.Auction;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface AuctionRepositoryImpl extends JpaRepository<Auction, Long>, AuctionRepositoryCustom {
+public interface AuctionRepositoryImpl extends CrudRepository<Auction, Long>, AuctionRepositoryCustom {
 
 
 }

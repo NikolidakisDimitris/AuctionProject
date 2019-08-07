@@ -62,7 +62,7 @@ public class AuctionController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Response newAuction(@Valid @RequestBody NewAuctionRequest request) throws AuctionException, AuthenticateException {
         log.info(AUCTION_CONTROLLER + NEW_AUCTION + "ready to create a new auction");
-
+        log.info(request.toString());
         services.newAuction(request);
         log.info(AUCTION_CONTROLLER + NEW_AUCTION + "Auction registered successfully");
         return new Response(SUCCESS, "Auction Registered successfully");
