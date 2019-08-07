@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 import static com.nikolidakis.models.constants.LogConstants.*;
 import static java.util.Objects.isNull;
@@ -73,11 +72,20 @@ public class AuctionServicesImpl implements AuctionServices {
 
         //find the user who wants to open a new auction
         User user = userServices.findUserByToken(request.getToken());
+        
+        // SAVE ANY NEW CATEGORY
+        if (request.getCategories() != null && !request.getCategories().isEmpty()) {
+        	for (ItemCategory category : request.getCategories()) {
+        		if (category != null && category.getCategoryId() == null) {        			
+        			category = itemCategoryRepository.save(category);
+        		}
+        	}
+        }
 
         //create the auction item, in order to save it in the database
         Auction auction = new Auction(null, request.getNameOfItem(), user, request.getStartedTime(),
                 request.getEndingTime(), request.getItemDescription(), request.getItemLocation(),
-                request.getItemCountry(), null, (Set<ItemCategory>) request.getCategories());
+                request.getItemCountry(), null, request.getCategories());
 
 //        for (String currentCategory : request.getCategories()) {
 //            ItemCategory category = new ItemCategory(null, currentCategory, auctions);

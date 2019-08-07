@@ -62,11 +62,11 @@ public class Auction {
     @JoinColumn(name = "auction_item_id")
     List<Bid> bids; //fetch it from another table
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinTable(
             name = "auctions_categories",
-            joinColumns = {@JoinColumn(name = "auction_id")},
-            inverseJoinColumns = {@JoinColumn(name = "category_id")})
+            joinColumns = {@JoinColumn(name = "auctionID")},
+            inverseJoinColumns = {@JoinColumn(name = "categoryID")})
     Set<ItemCategory> categories = new HashSet<>();
 
 
