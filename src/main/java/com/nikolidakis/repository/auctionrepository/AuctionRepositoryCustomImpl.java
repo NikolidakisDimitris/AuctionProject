@@ -29,8 +29,8 @@ public class AuctionRepositoryCustomImpl implements AuctionRepositoryCustom {
         List<Auction> openAuctions = null;
         log.info(AUCTION_REPOSITORY_CUSTOM_IMPL + GET_OPEN_AUCTIONS + "prepared to call the Database ");
         try {
-            TypedQuery<Auction> query = (TypedQuery<Auction>) entityManager.createNativeQuery("SELECT * FROM testDB.Auctions where " +
-                    "ending_time >= curdate();", Auction.class);
+            TypedQuery<Auction> query =
+                    (TypedQuery<Auction>) entityManager.createNativeQuery("SELECT * FROM " + DATABASE + ".Auctions where ending_time >= curdate();", Auction.class);
             openAuctions = query.getResultList();
             log.info(AUCTION_REPOSITORY_CUSTOM_IMPL + GET_OPEN_AUCTIONS + " Database call and cast of objects to type Auction was successful ");
         } catch (Exception e) {
@@ -47,9 +47,30 @@ public class AuctionRepositoryCustomImpl implements AuctionRepositoryCustom {
 
         TypedQuery query = (TypedQuery) entityManager.createNativeQuery("\n" +
                 "SELECT Auctions.*, Users.username \n" +
-                "FROM testDB.Auctions\n" +
+                "FROM " + DATABASE + ".Auctions\n" +
                 "inner join " + DATABASE + ".Users on Users.user_id = Auctions.seller_id;", Auction.class);
 
         return query.getResultList();
     }
+
+//    @Override
+//    @SuppressWarnings("unchecked")
+//    public Auction getAuctionById(String id){
+//        Auction auction= null;
+//        log.info(AUCTION_REPOSITORY_CUSTOM_IMPL + GET_AUCTION_BY_ID + "prepared to call the Database ");
+//
+//        try {
+//            TypedQuery<Auction> query = (TypedQuery<Auction>) entityManager.createNativeQuery("SELECT * FROM "+DATABASE+
+//                    ".auctions where auction_id="+id+";", Auction.class);
+//            auction = query.getSingleResult();
+//            log.info(AUCTION_REPOSITORY_CUSTOM_IMPL + GET_AUCTION_BY_ID + " Database call and cast of objects to type Auction was successful ");
+//            System.out.println(auction);
+//        } catch (Exception e) {
+//            log.error(AUCTION_REPOSITORY_CUSTOM_IMPL + GET_AUCTION_BY_ID + "Failed to call the Database or cast the objects to type Auction ");
+//            ExceptionUtils.getStackTrace(e);
+//        }
+//    return auction;
+//
+//    }
+
 }

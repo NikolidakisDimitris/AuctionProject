@@ -21,6 +21,8 @@ public class LogConstants {
     public static final String AUCTION_REPOSITORY_CUSTOM_IMPL = "AuctionRepositoryCustomImpl > ";
     public static final String NEW_AUCTION = "Method newAuction > ";
     public static final String AUCTION_SERVICES = "AuctionServices > ";
+    public static final String GET_AUCTION_BY_ID = "Method getAuctionById> ";
+
 
     //Constants for the Categories
     public static final String CATEGORIES_SERVICES = "ItemCategoriesServices > ";

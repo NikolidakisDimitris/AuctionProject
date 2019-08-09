@@ -1,5 +1,6 @@
 package com.nikolidakis.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -24,7 +25,8 @@ public class ItemCategory {
     @NotBlank
     private String categoryName;
 
-    @ManyToMany(mappedBy = "categories")
+    @ManyToMany(mappedBy = "categories", cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Auction> auctions = new HashSet<>();
 
     public ItemCategory(Long categoryId, @NotBlank String categoryName) {

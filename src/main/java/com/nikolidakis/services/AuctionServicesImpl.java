@@ -8,6 +8,7 @@ import com.nikolidakis.models.User;
 import com.nikolidakis.repository.ItemCategoryRepository;
 import com.nikolidakis.repository.UserRepository;
 import com.nikolidakis.repository.auctionrepository.AuctionRepositoryImpl;
+import com.nikolidakis.requests.GetAuctionRequest;
 import com.nikolidakis.requests.NewAuctionRequest;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -67,19 +68,20 @@ public class AuctionServicesImpl implements AuctionServices {
 
 
     //Method to create a new auction
+    @Override
     public void newAuction(NewAuctionRequest request) throws AuctionException, AuthenticateException {
         log.info(AUCTION_SERVICES + NEW_AUCTION + " ready to open a new auction");
 
         //find the user who wants to open a new auction
         User user = userServices.findUserByToken(request.getToken());
-        
+
         // SAVE ANY NEW CATEGORY
         if (request.getCategories() != null && !request.getCategories().isEmpty()) {
-        	for (ItemCategory category : request.getCategories()) {
-        		if (category != null && category.getCategoryId() == null) {        			
-        			category = itemCategoryRepository.save(category);
-        		}
-        	}
+            for (ItemCategory category : request.getCategories()) {
+                if (category != null && category.getCategoryId() == null) {
+                    category = itemCategoryRepository.save(category);
+                }
+            }
         }
 
         //create the auction item, in order to save it in the database
@@ -87,16 +89,29 @@ public class AuctionServicesImpl implements AuctionServices {
                 request.getEndingTime(), request.getItemDescription(), request.getItemLocation(),
                 request.getItemCountry(), null, request.getCategories());
 
-//        for (String currentCategory : request.getCategories()) {
-//            ItemCategory category = new ItemCategory(null, currentCategory, auctions);
-//            auction.getCategories().add(category);
-//
-//        }
-
         // save the new auction to the database
         log.info(auction.toString());
         Auction newAuction = auctionRepository.save(auction);
         log.info(AUCTION_SERVICES + NEW_AUCTION + " Auction registered successfully");
     }
 
+
+    @Override
+    public Auction getAuctionById(GetAuctionRequest request) throws AuctionException {
+        log.info(AUCTION_SERVICES + GET_AUCTION_BY_ID + "find auctions by ID");
+        List<Auction> auctions = (List<Auction>) auctionRepository.findAll();
+
+        System.out.println("Ola ta Auction einai" + auctions);
+        System.out.println("To Auction ID" + request.getAuctionId());
+        for (Auction element : auctions) {
+            System.out.println("To element ID" + element.getId());
+            if (Long.parseLong(request.getAuctionId()) == (element.getId())) {
+                return element;
+            }
+        }
+////        Auction auction = auctions.stream().map(Auction::getId).
+//        System.out.println(auction);
+//        log.info(AUCTION_SERVICES + GET_AUCTION_BY_ID + "auction found successfully ");
+        return null;
+    }
 }

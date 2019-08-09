@@ -1,5 +1,6 @@
 package com.nikolidakis.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -67,6 +68,7 @@ public class Auction {
             name = "auctions_categories",
             joinColumns = {@JoinColumn(name = "auctionID")},
             inverseJoinColumns = {@JoinColumn(name = "categoryID")})
+    @JsonIgnore
     Set<ItemCategory> categories = new HashSet<>();
 
 

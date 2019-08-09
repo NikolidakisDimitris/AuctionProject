@@ -23,9 +23,16 @@ public class BidController {
     @Autowired
     private final BidServices services;
 
+
+    /**
+     * Get All Bids
+     */
     @RequestMapping("/allbids")
     public List<Bid> allBids() {
         return services.getBids();
     }
 
+    /**
+     *
+     */
 }

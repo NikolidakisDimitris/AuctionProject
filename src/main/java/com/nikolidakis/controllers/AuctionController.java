@@ -3,8 +3,10 @@ package com.nikolidakis.controllers;
 import com.nikolidakis.exceptions.AuctionException;
 import com.nikolidakis.exceptions.AuthenticateException;
 import com.nikolidakis.models.Auction;
+import com.nikolidakis.requests.GetAuctionRequest;
 import com.nikolidakis.requests.NewAuctionRequest;
 import com.nikolidakis.responses.AllAuctionsResponse;
+import com.nikolidakis.responses.AuctionResponse;
 import com.nikolidakis.responses.OpenAuctionsResponse;
 import com.nikolidakis.responses.Response;
 import com.nikolidakis.services.AuctionServices;
@@ -37,8 +39,15 @@ public class AuctionController {
     private AuctionServices services;
 
     //Get all the auctions , even those that are not open now
-    @RequestMapping(value = "/allauctions")
 
+    /**
+     * Method to get ALL the auctions that exist  in the database.
+     *
+     * @return AllAuctionsResponse
+     * @throws AuctionException
+     */
+
+    @RequestMapping(value = "/allauctions")
     public Response getAllAuctions() throws AuctionException {
         log.info(AUCTION_CONTROLLER + GET_ALL_AUCTIONS + " going to search for all the Auctions");
         List<Auction> auctions = services.getAllAuctions();
@@ -48,6 +57,13 @@ public class AuctionController {
 
 
     //Get all the OpenAuctions -> now is before the endingTime
+
+    /**
+     * Method to get ALL the OPEN actions (ending date-time isAfter the current date-time)
+     *
+     * @return OpenAuctionsResponse
+     * @throws AuctionException
+     */
     @RequestMapping(value = "/openauctions")
     public Response getOpenAuctions() throws AuctionException {
         log.info(AUCTION_CONTROLLER + GET_OPEN_AUCTIONS);
@@ -57,6 +73,14 @@ public class AuctionController {
     }
 
 
+    /**
+     * Method to create a new Auction in the database
+     *
+     * @param #request
+     * @return Response
+     * @throws AuctionException
+     * @throws AuthenticateException
+     */
     @PostMapping(value = "/newauction",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -67,4 +91,23 @@ public class AuctionController {
         log.info(AUCTION_CONTROLLER + NEW_AUCTION + "Auction registered successfully");
         return new Response(SUCCESS, "Auction Registered successfully");
     }
+
+
+    /**
+     * Method to get A specific Auction by id,
+     */
+    @PostMapping(value = "/getauctionbyid",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response getAuctionById(@Valid @RequestBody GetAuctionRequest request) throws AuctionException {
+        log.info(AUCTION_CONTROLLER + GET_AUCTION_BY_ID + "ready to create a new auction");
+        Auction auction = services.getAuctionById(request);
+        log.info(AUCTION_CONTROLLER + GET_AUCTION_BY_ID + "suction returned Successfully");
+        return new AuctionResponse(SUCCESS, "Auction returned Successfully", auction);
+    }
+
+
+    /**
+     * Method to get ALL the Auctions by category, by sellerId, by bidder id,
+     */
 }

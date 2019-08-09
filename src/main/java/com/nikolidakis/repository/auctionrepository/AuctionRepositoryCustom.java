@@ -7,4 +7,5 @@ import java.util.List;
 public interface AuctionRepositoryCustom {
 
     public List<Auction> getOpenAuctions();
+
 }
