@@ -43,4 +43,23 @@ public class ItemCategoryServicesImpl implements ItemCategoryServices {
         return (List<ItemCategory>) repository.findAll();
     }
 
+    @Override
+    public ItemCategory findCategoryById(Long id) throws ItemCategoryException {
+
+        //check for null input
+        if (isNull(id)) {
+            throw new ItemCategoryException("Null Category");
+        }
+        return repository.findByCategoryId(id).orElse(null);
+    }
+
+    @Override
+    public ItemCategory findCategoryByName(String name) throws ItemCategoryException {
+        //check for null input
+        if (isNull(name)) {
+            throw new ItemCategoryException("Null Category");
+        }
+        return repository.findByCategoryName(name);
+    }
+
 }

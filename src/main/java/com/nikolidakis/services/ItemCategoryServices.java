@@ -11,4 +11,8 @@ public interface ItemCategoryServices {
 
     List<ItemCategory> findAllCategories();
 
+    ItemCategory findCategoryById(Long id) throws ItemCategoryException;
+
+    ItemCategory findCategoryByName(String name) throws ItemCategoryException;
+
 }

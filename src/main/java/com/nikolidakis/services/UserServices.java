@@ -12,6 +12,8 @@ public interface UserServices {
 
     List<User> getAllUser();
 
+    User findUserById(Long id);
+
     String getToken(AuthenticateUserRequest request) throws AuthenticateException;
 
     void registerNewUser(RegisterNewUserRequest request) throws UserException;

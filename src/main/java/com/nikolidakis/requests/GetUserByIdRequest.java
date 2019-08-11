@@ -2,11 +2,12 @@ package com.nikolidakis.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-public class GetAuctionRequest extends Request {
+@NoArgsConstructor
+public class GetUserByIdRequest {
 
-    private String auctionId;
-
+    private Long id;
 }

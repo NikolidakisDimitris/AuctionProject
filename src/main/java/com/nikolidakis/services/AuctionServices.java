@@ -4,7 +4,9 @@ import com.nikolidakis.exceptions.AuctionException;
 import com.nikolidakis.exceptions.AuthenticateException;
 import com.nikolidakis.models.Auction;
 import com.nikolidakis.requests.GetAuctionRequest;
+import com.nikolidakis.requests.GetAuctionsByFieldRequest;
 import com.nikolidakis.requests.NewAuctionRequest;
+import com.nikolidakis.requests.NewBidRequest;
 
 import java.util.List;
 
@@ -17,4 +19,9 @@ public interface AuctionServices {
     void newAuction(NewAuctionRequest request) throws AuctionException, AuthenticateException;
 
     Auction getAuctionById(GetAuctionRequest request) throws AuctionException;
+
+    List<Auction> getAuctionsByField(GetAuctionsByFieldRequest request) throws AuthenticateException;
+
+    void newBid(NewBidRequest request) throws AuthenticateException, AuctionException;
+
 }

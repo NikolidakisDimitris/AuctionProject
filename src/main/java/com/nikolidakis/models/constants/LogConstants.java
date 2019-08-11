@@ -22,13 +22,24 @@ public class LogConstants {
     public static final String NEW_AUCTION = "Method newAuction > ";
     public static final String AUCTION_SERVICES = "AuctionServices > ";
     public static final String GET_AUCTION_BY_ID = "Method getAuctionById> ";
+    public static final String GET_AUCTIONS_BY_FIELD = "Method getAuctionsByField> ";
 
 
     //Constants for the Categories
     public static final String CATEGORIES_SERVICES = "ItemCategoriesServices > ";
     public static final String CATEGORIES_CONTROLLER = "ItemCategoriesController > ";
     public static final String ADD_CATEGORY = " Method Add category > ";
-    public static final String GET_CATEGORY = " Method Get category > ";
+    public static final String GET_CATEGORIES = " Method Get All categories > ";
+    public static final String GET_CATEGORY_BY_ID = " Method Get category  by ID> ";
+    public static final String GET_CATEGORY_BY_NAME = " Method Get category by Name > ";
+
+    //Constants for the Bids
+    public static final String BID_CONROLLER = "Bid Controller > ";
+    public static final String BID_SERVICES = "Bid Services > ";
+    public static final String GET_ALL_BIDS = "Method Get All Bids > ";
+    public static final String GET_BIDS_BY_AUCTION_ID = "Method Get Bids By AuctionId > ";
+    public static final String NEW_BID = "Method New Bid > ";
+
 
 
     //General Errors

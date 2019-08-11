@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -61,7 +62,7 @@ public class Auction {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "auction_item_id")
-    List<Bid> bids; //fetch it from another table
+    List<Bid> bids = new ArrayList<>(); //fetch it from another table
 
     @ManyToMany(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinTable(

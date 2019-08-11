@@ -4,10 +4,11 @@ import com.nikolidakis.exceptions.AuctionException;
 import com.nikolidakis.exceptions.AuthenticateException;
 import com.nikolidakis.models.Auction;
 import com.nikolidakis.requests.GetAuctionRequest;
+import com.nikolidakis.requests.GetAuctionsByFieldRequest;
 import com.nikolidakis.requests.NewAuctionRequest;
-import com.nikolidakis.responses.AllAuctionsResponse;
+import com.nikolidakis.requests.NewBidRequest;
 import com.nikolidakis.responses.AuctionResponse;
-import com.nikolidakis.responses.OpenAuctionsResponse;
+import com.nikolidakis.responses.AuctionsListResponse;
 import com.nikolidakis.responses.Response;
 import com.nikolidakis.services.AuctionServices;
 import lombok.Data;
@@ -43,7 +44,7 @@ public class AuctionController {
     /**
      * Method to get ALL the auctions that exist  in the database.
      *
-     * @return AllAuctionsResponse
+     * @return AuctionsListResponse
      * @throws AuctionException
      */
 
@@ -52,7 +53,7 @@ public class AuctionController {
         log.info(AUCTION_CONTROLLER + GET_ALL_AUCTIONS + " going to search for all the Auctions");
         List<Auction> auctions = services.getAllAuctions();
         log.info(AUCTION_CONTROLLER + GET_ALL_AUCTIONS + "Found all the Auctions");
-        return new AllAuctionsResponse(SUCCESS, "All auctions found", auctions);
+        return new AuctionsListResponse(SUCCESS, "All auctions found", auctions);
     }
 
 
@@ -61,7 +62,7 @@ public class AuctionController {
     /**
      * Method to get ALL the OPEN actions (ending date-time isAfter the current date-time)
      *
-     * @return OpenAuctionsResponse
+     * @return AuctionsListResponse
      * @throws AuctionException
      */
     @RequestMapping(value = "/openauctions")
@@ -69,7 +70,7 @@ public class AuctionController {
         log.info(AUCTION_CONTROLLER + GET_OPEN_AUCTIONS);
         List<Auction> openAuctions = services.getOpenAuctions();
         log.info(AUCTION_CONTROLLER + GET_OPEN_AUCTIONS + "found all the open auctions");
-        return new OpenAuctionsResponse(SUCCESS, "Open Auctions found", openAuctions);
+        return new AuctionsListResponse(SUCCESS, "Open Auctions found", openAuctions);
     }
 
 
@@ -110,4 +111,24 @@ public class AuctionController {
     /**
      * Method to get ALL the Auctions by category, by sellerId, by bidder id,
      */
+    @PostMapping(value = "/getauctionsbyfield",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response getAuctionsByField(@Valid @RequestBody GetAuctionsByFieldRequest request) throws AuthenticateException {
+        log.info(AUCTION_CONTROLLER + GET_AUCTIONS_BY_FIELD + "ready get the auctions by " + request.getFieldName());
+        List<Auction> auctions = services.getAuctionsByField(request);
+        log.info(AUCTION_CONTROLLER + GET_AUCTIONS_BY_FIELD + "asuctions returned Successfully");
+        return new AuctionsListResponse(SUCCESS, "Auction returned Successfully", auctions);
+    }
+
+
+    @PostMapping(value = "/newbid",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public void newBid(@Valid @RequestBody NewBidRequest request) throws AuthenticateException, AuctionException {
+        log.info(AUCTION_CONTROLLER + NEW_BID + " ready to place a new bid");
+        services.newBid(request);
+        log.info(AUCTION_CONTROLLER + NEW_BID + " New bid saved successfully");
+    }
+
 }

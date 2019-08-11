@@ -32,7 +32,6 @@ public class UserServicesImpl implements UserServices {
         return users;
     }
 
-
     //Register a new User
     @Override
     public void registerNewUser(RegisterNewUserRequest request) throws UserException {
@@ -98,4 +97,10 @@ public class UserServicesImpl implements UserServices {
         log.error(USER_SERVICE + FIND_USER_BY_TOKEN + "Wrong token");
         throw new AuthenticateException("Incorrect token !");
     }
+
+    @Override
+    public User findUserById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
 }

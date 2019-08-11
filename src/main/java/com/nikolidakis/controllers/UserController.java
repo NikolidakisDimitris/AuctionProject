@@ -2,7 +2,9 @@ package com.nikolidakis.controllers;
 
 import com.nikolidakis.exceptions.AuthenticateException;
 import com.nikolidakis.exceptions.UserException;
+import com.nikolidakis.models.User;
 import com.nikolidakis.requests.AuthenticateUserRequest;
+import com.nikolidakis.requests.GetUserByIdRequest;
 import com.nikolidakis.requests.RegisterNewUserRequest;
 import com.nikolidakis.responses.AllUsersResponse;
 import com.nikolidakis.responses.AuthenticationResponse;
@@ -58,7 +60,16 @@ public class UserController {
         String token = services.getToken(request);
         log.info(USER_CONTROLER + "Authentication was successful");
         return new AuthenticationResponse(SUCCESS, "Authenticated User OK", token);
+    }
 
+    @PostMapping(value = "/finduserbyid",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public User findUserById(@Valid @RequestBody GetUserByIdRequest request) {
+        log.info(USER_CONTROLER + "Method getUserById");
+        User user = services.findUserById(request.getId());
+        log.info(USER_CONTROLER + "User found successful");
+        return user;
     }
 
 }
