@@ -9,9 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -60,15 +58,11 @@ public class Auction {
     @Size(max = 30)
     String itemCountry;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "auction_item_id")
-    List<Bid> bids = new ArrayList<>(); //fetch it from another table
-
     @ManyToMany(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinTable(
             name = "auctions_categories",
-            joinColumns = {@JoinColumn(name = "auctionID")},
-            inverseJoinColumns = {@JoinColumn(name = "categoryID")})
+            joinColumns = {@JoinColumn(name = "auction_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id")})
     @JsonIgnore
     Set<ItemCategory> categories = new HashSet<>();
 

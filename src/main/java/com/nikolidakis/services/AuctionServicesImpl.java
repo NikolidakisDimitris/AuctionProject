@@ -94,7 +94,7 @@ public class AuctionServicesImpl implements AuctionServices {
         //create the auction item, in order to save it in the database
         Auction auction = new Auction(null, request.getNameOfItem(), user, request.getStartedTime(),
                 request.getEndingTime(), request.getItemDescription(), request.getItemLocation(),
-                request.getItemCountry(), null, request.getCategories());
+                request.getItemCountry(), request.getCategories());
 
         // save the new auction to the database
         log.info(auction.toString());
@@ -107,6 +107,7 @@ public class AuctionServicesImpl implements AuctionServices {
     @Override
     public Auction getAuctionById(GetAuctionRequest request) throws AuctionException {
         log.info(AUCTION_SERVICES + GET_AUCTION_BY_ID + "find auctions by ID");
+//        Auction auction = auctionRepository.findAuctionById(Long.parseLong(request.getAuctionId()));
         Auction auction = auctionRepository.findById(Long.parseLong(request.getAuctionId())).orElse(null);
         System.out.println(auction);
 //        List<Auction> auctions = (List<Auction>) auctionRepository.findAll();
@@ -143,20 +144,20 @@ public class AuctionServicesImpl implements AuctionServices {
                 break;
 
             //TODO: needs testing
-            case "bidder":
-                //find user by the provided token
-                User user1 = userServices.findUserByToken(request.getFieldValue());
-                System.out.println(user1);
-
-                //find the bids given by this user
-                List<Bid> bids = bidRepository.findByBidder(user1);
-
-                //find the auctions by this bids
-                auctions = auctionRepository.findByBids(bids);
+//            case "bidder":
+//                //find user by the provided token
+//                User user1 = userServices.findUserByToken(request.getFieldValue());
+//                System.out.println(user1);
+//
+//                //find the bids given by this user
+//                List<Bid> bids = bidRepository.findByBidder(user1);
+//
+//                //find the auctions by this bids
+//                auctions = auctionRepository.findByBids(bids);
 
                 //TODO: needs bug fix
             case "auctionId":
-                Auction auction = auctionRepository.findById(Long.parseLong(request.getFieldValue())).orElse(null);
+                Auction auction = auctionRepository.findAuctionById(Long.parseLong(request.getFieldValue()));
                 System.out.println("to auction einai" + auction);
                 auctions = new ArrayList<>();
                 auctions.add(auction);
@@ -172,24 +173,26 @@ public class AuctionServicesImpl implements AuctionServices {
         //find bidder by the provided token
         User user = userServices.findUserByToken(request.getBidderToken());
 
-        // Create the new Bid object
-        Bid bid = new Bid(null, user, LocalDateTime.now().toString(), request.getBidderValue());
+
 
         // Find the auction by the ID
         Auction auction = auctionRepository.findById(Long.parseLong(request.getAuctionId())).orElse(null);
+
+        // Create the new Bid object
+        Bid bid = new Bid(null, user, LocalDateTime.now().toString(), request.getBidderValue(), auction);
 
         if (isNull(auction)) {
             throw new AuctionException("No such auction ");
         }
         //TODO: may have null pointer exception. Needs to check it
         //update the auction
-        if (isNull(auction.getBids())) {
-            List<Bid> bidList = new ArrayList<>();
-            bidList.add(bid);
-            auction.setBids(bidList);
-        } else {
-            auction.getBids().add(bid);
-        }
+//        if (isNull(auction.getBids())) {
+//            List<Bid> bidList = new ArrayList<>();
+//            bidList.add(bid);
+//            auction.setBids(bidList);
+//        } else {
+//            auction.getBids().add(bid);
+//        }
         auctionRepository.save(auction);
     }
 }

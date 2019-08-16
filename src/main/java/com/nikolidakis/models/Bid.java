@@ -17,7 +17,7 @@ public class Bid {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "bid_id")
-    Long bid_id;
+    private Long bid_id;
 
 //    @Column(name = "auction_item_id")
 //    @NotBlank
@@ -26,14 +26,20 @@ public class Bid {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bidder_id", referencedColumnName = "user_id")
-    User bidder;
+    private User bidder;
 
     @Column(name = "bid_time")
     @NotBlank
-    String bidTime; //should be done localTime
+    private String bidTime; //should be done localTime
 
     @Column(name = "bid_price")
     @NotBlank
-    double bidPrice;
+    private double bidPrice;
+
+    //    @Column(name = "auction_id")
+//    @NotBlank
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "auction_item_id", referencedColumnName = "auction_ID")
+    private Auction auction;
 
 }

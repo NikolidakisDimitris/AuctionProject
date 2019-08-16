@@ -101,6 +101,7 @@ public class AuctionController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Response getAuctionById(@Valid @RequestBody GetAuctionRequest request) throws AuctionException {
+        System.out.println(request);
         log.info(AUCTION_CONTROLLER + GET_AUCTION_BY_ID + "ready to create a new auction");
         Auction auction = services.getAuctionById(request);
         log.info(AUCTION_CONTROLLER + GET_AUCTION_BY_ID + "suction returned Successfully");
@@ -117,7 +118,7 @@ public class AuctionController {
     public Response getAuctionsByField(@Valid @RequestBody GetAuctionsByFieldRequest request) throws AuthenticateException {
         log.info(AUCTION_CONTROLLER + GET_AUCTIONS_BY_FIELD + "ready get the auctions by " + request.getFieldName());
         List<Auction> auctions = services.getAuctionsByField(request);
-        log.info(AUCTION_CONTROLLER + GET_AUCTIONS_BY_FIELD + "asuctions returned Successfully");
+        log.info(AUCTION_CONTROLLER + GET_AUCTIONS_BY_FIELD + "auctions returned Successfully");
         return new AuctionsListResponse(SUCCESS, "Auction returned Successfully", auctions);
     }
 

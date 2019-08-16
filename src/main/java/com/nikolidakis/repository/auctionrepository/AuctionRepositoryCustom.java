@@ -8,4 +8,6 @@ public interface AuctionRepositoryCustom {
 
     public List<Auction> getOpenAuctions();
 
+    public Auction findAuctionById(Long id);
+
 }
