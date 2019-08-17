@@ -1,18 +1,21 @@
 package com.nikolidakis.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 
 @Entity
 @Table(name = "Categories", uniqueConstraints = {@UniqueConstraint(columnNames = {"categoryName"})})
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class ItemCategory {
 
@@ -33,4 +36,22 @@ public class ItemCategory {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(categoryId);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ItemCategory other = (ItemCategory) obj;
+        return Objects.equals(categoryId, other.categoryId);
+    }
+
 }

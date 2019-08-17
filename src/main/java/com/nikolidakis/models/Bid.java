@@ -1,21 +1,24 @@
 package com.nikolidakis.models;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Bids")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Bid {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bid_id")
     private Long bid_id;
 
@@ -38,8 +41,25 @@ public class Bid {
 
     //    @Column(name = "auction_id")
 //    @NotBlank
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "auction_item_id", referencedColumnName = "auction_ID")
     private Auction auction;
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(bid_id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Bid other = (Bid) obj;
+        return Objects.equals(bid_id, other.bid_id);
+    }
 
 }

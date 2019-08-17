@@ -54,6 +54,10 @@ public class AuctionServicesImpl implements AuctionServices {
     public List<Auction> getAllAuctions() throws AuctionException {
         log.info(AUCTION_SERVICES + GET_ALL_AUCTIONS + "find all auctions");
         List<Auction> auctions = (List<Auction>) auctionRepository.findAll();
+        for (Auction element : auctions) {
+
+            System.out.println(element);
+        }
         log.info(AUCTION_SERVICES + GET_ALL_AUCTIONS + "auctions found successfully ");
         return auctions;
 
@@ -109,7 +113,6 @@ public class AuctionServicesImpl implements AuctionServices {
         log.info(AUCTION_SERVICES + GET_AUCTION_BY_ID + "find auctions by ID");
 //        Auction auction = auctionRepository.findAuctionById(Long.parseLong(request.getAuctionId()));
         Auction auction = auctionRepository.findById(Long.parseLong(request.getAuctionId())).orElse(null);
-        System.out.println(auction);
 //        List<Auction> auctions = (List<Auction>) auctionRepository.findAll();
 
 //        System.out.println("Ola ta Auction einai" + auctions);
@@ -157,7 +160,7 @@ public class AuctionServicesImpl implements AuctionServices {
 
                 //TODO: needs bug fix
             case "auctionId":
-                Auction auction = auctionRepository.findAuctionById(Long.parseLong(request.getFieldValue()));
+                Auction auction = auctionRepository.findById(Long.parseLong(request.getFieldValue())).orElse(null);
                 System.out.println("to auction einai" + auction);
                 auctions = new ArrayList<>();
                 auctions.add(auction);
