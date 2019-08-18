@@ -9,9 +9,11 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetAuctionRequest extends Request {
+public class DeleteAuctioById {
 
     @NotNull
     private Long auctionId;
 
+    @NotNull
+    private String token;
 }

@@ -3,7 +3,6 @@ package com.nikolidakis.services;
 import com.nikolidakis.exceptions.AuctionException;
 import com.nikolidakis.exceptions.AuthenticateException;
 import com.nikolidakis.models.Auction;
-import com.nikolidakis.requests.GetAuctionRequest;
 import com.nikolidakis.requests.GetAuctionsByFieldRequest;
 import com.nikolidakis.requests.NewAuctionRequest;
 import com.nikolidakis.requests.NewBidRequest;
@@ -18,10 +17,12 @@ public interface AuctionServices {
 
     void newAuction(NewAuctionRequest request) throws AuctionException, AuthenticateException;
 
-    Auction getAuctionById(GetAuctionRequest request) throws AuctionException;
+    Auction getAuctionById(Long auctionId) throws AuctionException;
 
     List<Auction> getAuctionsByField(GetAuctionsByFieldRequest request) throws AuthenticateException;
 
     void newBid(NewBidRequest request) throws AuthenticateException, AuctionException;
+
+    void deleteAuctionById(Long auctionId, String token) throws AuthenticateException, AuctionException;
 
 }

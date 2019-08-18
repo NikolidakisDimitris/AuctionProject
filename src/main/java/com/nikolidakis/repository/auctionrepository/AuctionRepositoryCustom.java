@@ -10,4 +10,5 @@ public interface AuctionRepositoryCustom {
 
     public Auction findAuctionById(Long id);
 
+    public void deleteAuction(Auction auction);
 }

@@ -24,6 +24,7 @@ public class LogConstants {
     public static final String FIND_AUCTION_BY_ID = "Method findById (Auctions)";
     public static final String GET_AUCTION_BY_ID = "Method getAuctionById> ";
     public static final String GET_AUCTIONS_BY_FIELD = "Method getAuctionsByField> ";
+    public static final String DELETE_AUCTION_BY_ID = "Method deleteAuctionById> ";
 
 
     //Constants for the Categories

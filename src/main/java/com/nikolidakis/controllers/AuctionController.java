@@ -3,10 +3,10 @@ package com.nikolidakis.controllers;
 import com.nikolidakis.exceptions.AuctionException;
 import com.nikolidakis.exceptions.AuthenticateException;
 import com.nikolidakis.models.Auction;
+import com.nikolidakis.requests.DeleteAuctioById;
 import com.nikolidakis.requests.GetAuctionRequest;
 import com.nikolidakis.requests.GetAuctionsByFieldRequest;
 import com.nikolidakis.requests.NewAuctionRequest;
-import com.nikolidakis.requests.NewBidRequest;
 import com.nikolidakis.responses.AuctionResponse;
 import com.nikolidakis.responses.AuctionsListResponse;
 import com.nikolidakis.responses.Response;
@@ -39,10 +39,8 @@ public class AuctionController {
     @Autowired
     private AuctionServices services;
 
-    //Get all the auctions , even those that are not open now
-
     /**
-     * Method to get ALL the auctions that exist  in the database.
+     * Method to get ALL the auctions that exist  in the database, even those that are not open now.
      *
      * @return AuctionsListResponse
      * @throws AuctionException
@@ -56,8 +54,6 @@ public class AuctionController {
         return new AuctionsListResponse(SUCCESS, "All auctions found", auctions);
     }
 
-
-    //Get all the OpenAuctions -> now is before the endingTime
 
     /**
      * Method to get ALL the OPEN actions (ending date-time isAfter the current date-time)
@@ -95,7 +91,12 @@ public class AuctionController {
 
 
     /**
-     * Method to get A specific Auction by id,
+     *
+     * Method to get A specific Auction by its id,
+     *
+     * @param request
+     * @return
+     * @throws AuctionException
      */
     @PostMapping(value = "/getauctionbyid",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -103,14 +104,19 @@ public class AuctionController {
     public Response getAuctionById(@Valid @RequestBody GetAuctionRequest request) throws AuctionException {
         System.out.println(request);
         log.info(AUCTION_CONTROLLER + GET_AUCTION_BY_ID + "ready to create a new auction");
-        Auction auction = services.getAuctionById(request);
+        Auction auction = services.getAuctionById(request.getAuctionId());
         log.info(AUCTION_CONTROLLER + GET_AUCTION_BY_ID + "suction returned Successfully");
         return new AuctionResponse(SUCCESS, "Auction returned Successfully", auction);
     }
 
 
     /**
+     *
      * Method to get ALL the Auctions by category, by sellerId, by bidder id,
+     *
+     * @param request
+     * @return
+     * @throws AuthenticateException
      */
     @PostMapping(value = "/getauctionsbyfield",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -122,14 +128,13 @@ public class AuctionController {
         return new AuctionsListResponse(SUCCESS, "Auction returned Successfully", auctions);
     }
 
-
-    @PostMapping(value = "/newbid",
+    @PostMapping(value = "/deleteauctionbyid",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public void newBid(@Valid @RequestBody NewBidRequest request) throws AuthenticateException, AuctionException {
-        log.info(AUCTION_CONTROLLER + NEW_BID + " ready to place a new bid");
-        services.newBid(request);
-        log.info(AUCTION_CONTROLLER + NEW_BID + " New bid saved successfully");
+    public Response deleteAuctionById(@Valid @RequestBody DeleteAuctioById request) throws AuthenticateException, AuctionException {
+        log.info(AUCTION_CONTROLLER + DELETE_AUCTION_BY_ID + "ready to delete the auction with id" + request);
+        services.deleteAuctionById(request.getAuctionId(), request.getToken());
+        log.info(AUCTION_CONTROLLER + DELETE_AUCTION_BY_ID + "auctions deleted Successfully");
+        return new Response(SUCCESS, "Auction deleted Successfully");
     }
-
 }

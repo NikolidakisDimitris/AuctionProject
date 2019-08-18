@@ -10,7 +10,6 @@ import com.nikolidakis.repository.BidRepository;
 import com.nikolidakis.repository.ItemCategoryRepository;
 import com.nikolidakis.repository.UserRepository;
 import com.nikolidakis.repository.auctionrepository.AuctionRepository;
-import com.nikolidakis.requests.GetAuctionRequest;
 import com.nikolidakis.requests.GetAuctionsByFieldRequest;
 import com.nikolidakis.requests.NewAuctionRequest;
 import com.nikolidakis.requests.NewBidRequest;
@@ -21,10 +20,13 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.nikolidakis.models.constants.LogConstants.*;
 import static java.util.Objects.isNull;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Service
 @Data
@@ -40,11 +42,13 @@ public class AuctionServicesImpl implements AuctionServices {
 
     @Autowired
     private AuctionServicesImpl(AuctionRepository auctionRepository, UserRepository userRepository,
-                                UserServices userServices, ItemCategoryRepository itemCategoryRepository) {
+                                UserServices userServices, ItemCategoryRepository itemCategoryRepository,
+                                BidRepository bidRepository) {
         this.auctionRepository = auctionRepository;
         this.userRepository = userRepository;
         this.userServices = userServices;
         this.itemCategoryRepository = itemCategoryRepository;
+        this.bidRepository = bidRepository;
 
     }
 
@@ -107,32 +111,18 @@ public class AuctionServicesImpl implements AuctionServices {
     }
 
 
-    //TODO: needs bug fix
     @Override
-    public Auction getAuctionById(GetAuctionRequest request) throws AuctionException {
+    public Auction getAuctionById(Long auctionId) throws AuctionException {
         log.info(AUCTION_SERVICES + GET_AUCTION_BY_ID + "find auctions by ID");
-//        Auction auction = auctionRepository.findAuctionById(Long.parseLong(request.getAuctionId()));
-        Auction auction = auctionRepository.findById(Long.parseLong(request.getAuctionId())).orElse(null);
-//        List<Auction> auctions = (List<Auction>) auctionRepository.findAll();
-
-//        System.out.println("Ola ta Auction einai" + auctions);
-//        System.out.println("To Auction ID" + request.getAuctionId());
-//        for (Auction element : auctions) {
-//            System.out.println("To element ID" + element.getId());
-//            if (Long.parseLong(request.getAuctionId()) == (element.getId())) {
-//                return element;
-//            }
-//        }
-////        Auction auction = auctions.stream().map(Auction::getId).
-//        System.out.println(auction);
-//        log.info(AUCTION_SERVICES + GET_AUCTION_BY_ID + "auction found successfully ");
+        Auction auction = auctionRepository.findById(auctionId).orElse(null);
+        log.info(AUCTION_SERVICES + GET_AUCTION_BY_ID + "auction found successfully ");
         return auction;
     }
 
     @Override
     public List<Auction> getAuctionsByField(GetAuctionsByFieldRequest request) throws AuthenticateException {
         log.info(AUCTION_SERVICES + GET_AUCTIONS_BY_FIELD + "find auctions by " + request.getFieldName());
-        List<Auction> auctions = null;
+        List<Auction> auctions = new ArrayList<>();
         System.out.println(request.getFieldName());
         System.out.println(request.getFieldValue());
         switch (request.getFieldName()) {
@@ -142,29 +132,23 @@ public class AuctionServicesImpl implements AuctionServices {
                 break;
             case "seller":
                 User user = userRepository.findById(Long.parseLong(request.getFieldValue())).orElse(null);
-                System.out.println(user);
                 auctions = auctionRepository.findBySeller(user);
                 break;
+            case "bidder":
+                //find user by the provided token
+                User user1 = userServices.findUserByToken(request.getFieldValue());
 
-            //TODO: needs testing
-//            case "bidder":
-//                //find user by the provided token
-//                User user1 = userServices.findUserByToken(request.getFieldValue());
-//                System.out.println(user1);
-//
-//                //find the bids given by this user
-//                List<Bid> bids = bidRepository.findByBidder(user1);
-//
-//                //find the auctions by this bids
-//                auctions = auctionRepository.findByBids(bids);
+                //find the bids given by this user
+                List<Bid> bids = bidRepository.findByBidder(user1);
 
-                //TODO: needs bug fix
-            case "auctionId":
-                Auction auction = auctionRepository.findById(Long.parseLong(request.getFieldValue())).orElse(null);
-                System.out.println("to auction einai" + auction);
-                auctions = new ArrayList<>();
-                auctions.add(auction);
-                break;
+                //get each auction that this user has given a bid (use set to take each auction only once, and then
+                // move set to the list
+                Set<Auction> auctionSet = new HashSet<>();
+                for (Bid current : bids) {
+                    auctionSet.add(current.getAuction());
+                    System.out.println("Auction is " + current);
+                }
+                auctions.addAll(auctionSet);
         }
         return auctions;
     }
@@ -176,26 +160,52 @@ public class AuctionServicesImpl implements AuctionServices {
         //find bidder by the provided token
         User user = userServices.findUserByToken(request.getBidderToken());
 
-
-
         // Find the auction by the ID
-        Auction auction = auctionRepository.findById(Long.parseLong(request.getAuctionId())).orElse(null);
-
-        // Create the new Bid object
-        Bid bid = new Bid(null, user, LocalDateTime.now().toString(), request.getBidderValue(), auction);
+        Auction auction = auctionRepository.findById(request.getAuctionId()).orElse(null);
 
         if (isNull(auction)) {
             throw new AuctionException("No such auction ");
         }
-        //TODO: may have null pointer exception. Needs to check it
-        //update the auction
-//        if (isNull(auction.getBids())) {
-//            List<Bid> bidList = new ArrayList<>();
-//            bidList.add(bid);
-//            auction.setBids(bidList);
-//        } else {
-//            auction.getBids().add(bid);
-//        }
+        // Create the new Bid object
+        Bid bid = new Bid(null, user, LocalDateTime.now().toString(), request.getBidderValue(), auction);
+
         auctionRepository.save(auction);
     }
+
+    @Override
+    public void deleteAuctionById(Long auctionId, String token) throws AuthenticateException, AuctionException {
+        //find the user
+        log.info(AUCTION_SERVICES + DELETE_AUCTION_BY_ID + " Ready to find the user who want to delete the auction");
+        User user = userServices.findUserByToken(token);
+
+        //find the auction
+        Auction auction = auctionRepository.findById(auctionId).orElse(null);
+
+        if (isEmpty(auction)) {
+            log.info(AUCTION_SERVICES + DELETE_AUCTION_BY_ID + " The auction doesn't exist ");
+            throw new AuctionException("The auction doesn't exist (auction is null)");
+        }
+
+        //check if the seller is the user who want to delete the auction
+        if (!user.equals(auction.getSeller())) {
+            log.info(AUCTION_SERVICES + DELETE_AUCTION_BY_ID + " User is different than the seller ");
+            throw new AuctionException("The auction can not be deleted as the user is not the owner of the auction ");
+        }
+
+        //Check if this auction has bids
+        List<Bid> bids = bidRepository.findByAuction(auction);
+        if (!isEmpty(bids)) {
+            log.info(AUCTION_SERVICES + DELETE_AUCTION_BY_ID + " Bids exist, so delete can not proceed");
+            throw new AuctionException("The auction can not be deleted because this auction has already bids");
+        }
+
+        //delete the auction if any bid is open
+        log.info(AUCTION_SERVICES + DELETE_AUCTION_BY_ID + " Ready to delete the auction ");
+        auction.getCategories().clear();
+        auctionRepository.deleteAuction(auction);
+        log.info(AUCTION_SERVICES + DELETE_AUCTION_BY_ID + " The auction has been deleted successfully ");
+
+    }
+
+
 }

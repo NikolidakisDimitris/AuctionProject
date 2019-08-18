@@ -1,7 +1,12 @@
 package com.nikolidakis.controllers;
 
+import com.nikolidakis.exceptions.AuctionException;
+import com.nikolidakis.exceptions.AuthenticateException;
+import com.nikolidakis.exceptions.BidException;
 import com.nikolidakis.models.Bid;
 import com.nikolidakis.requests.GetBidsByAuctionRequest;
+import com.nikolidakis.requests.NewBidRequest;
+import com.nikolidakis.responses.Response;
 import com.nikolidakis.services.BidServices;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
-import static com.nikolidakis.models.constants.LogConstants.BID_CONROLLER;
-import static com.nikolidakis.models.constants.LogConstants.GET_ALL_BIDS;
+import static com.nikolidakis.models.constants.LogConstants.*;
+import static com.nikolidakis.models.constants.StatusCodes.SUCCESS;
 
 /**
  * Just give a bid
@@ -41,27 +46,42 @@ public class BidController {
         return services.getBids();
     }
 
+
     /**
-     * Probably not any reason to implement it. if you get the auction , the auction also carry a list with all the
-     * bids.
-     * Need to remove any related classes
+     *
+     * Get All the bids according to the auctionId
+     *
+     * @param request
+     * @return List<Bid>
+     * @throws AuctionException
      */
     @PostMapping(value = "/getbidsbyauction",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Bid> getBidsByAuction(@Valid @RequestBody GetBidsByAuctionRequest request) {
+    public List<Bid> getBidsByAuction(@Valid @RequestBody GetBidsByAuctionRequest request) throws AuctionException, BidException {
+        log.info(BID_CONROLLER + GET_BIDS_BY_AUCTION_ID + " ready to find the auctions by the bid");
+        services.getBidsByAuction(request.getAuctionId());
 
-        return services.getBids();
+        log.info(BID_CONROLLER + GET_BIDS_BY_AUCTION_ID + " found the bids successfully");
+        return services.getBidsByAuction(request.getAuctionId());
     }
 
-//TODO : Needs implementation cause it is not complete.
-//    @PostMapping(value = "/newbid",
-//            consumes = MediaType.APPLICATION_JSON_VALUE,
-//            produces = MediaType.APPLICATION_JSON_VALUE)
-//    public void newBid(@Valid @RequestBody NewBidRequest request) {
-//        log.info(BID_CONROLLER+NEW_BID+" ready to place a new bid");
-//        services.newBid(request);
-//        return services.getBids();
-//    }
+    /**
+     * Create a new bid to a specific auction
+     *
+     * @param request
+     * @return
+     * @throws AuthenticateException
+     * @throws AuctionException
+     */
+    @PostMapping(value = "/newbid",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response newBid(@Valid @RequestBody NewBidRequest request) throws AuthenticateException, AuctionException {
+        log.info(BID_CONROLLER + NEW_BID + " ready to place a new bid");
+        services.newBid(request);
+        log.info(BID_CONROLLER + NEW_BID + " saved successfully");
+        return new Response(SUCCESS, "The bid registered successfully");
+    }
 
 }

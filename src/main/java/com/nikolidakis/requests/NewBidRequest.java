@@ -17,5 +17,5 @@ public class NewBidRequest extends Response {
     @NotNull
     private double bidderValue;
     @NotNull
-    private String auctionId;
+    private Long auctionId;
 }

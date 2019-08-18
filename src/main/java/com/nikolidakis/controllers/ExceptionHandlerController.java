@@ -2,10 +2,7 @@ package com.nikolidakis.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nikolidakis.exceptions.AuctionException;
-import com.nikolidakis.exceptions.AuthenticateException;
-import com.nikolidakis.exceptions.ItemCategoryException;
-import com.nikolidakis.exceptions.UserException;
+import com.nikolidakis.exceptions.*;
 import com.nikolidakis.responses.ErrorResponse;
 import com.nikolidakis.responses.Response;
 import lombok.extern.slf4j.Slf4j;
@@ -99,6 +96,14 @@ public class ExceptionHandlerController {
     @ExceptionHandler
     public ResponseEntity<Response> itemCategoryException(ItemCategoryException exception) throws JsonProcessingException {
         ErrorResponse omResponse = new ErrorResponse(ITEM_CATEGORY_EXCEPTION, exception.getMessage());
+        log.info("Returning output: {}", jsonMapper.writeValueAsString(omResponse));
+        return new ResponseEntity<>(omResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    //AuctionException
+    @ExceptionHandler
+    public ResponseEntity<Response> itemCategoryException(BidException exception) throws JsonProcessingException {
+        ErrorResponse omResponse = new ErrorResponse(BID_EXCEPTION, exception.getMessage());
         log.info("Returning output: {}", jsonMapper.writeValueAsString(omResponse));
         return new ResponseEntity<>(omResponse, HttpStatus.BAD_REQUEST);
     }

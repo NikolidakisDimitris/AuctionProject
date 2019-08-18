@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
@@ -22,25 +22,19 @@ public class Bid {
     @Column(name = "bid_id")
     private Long bid_id;
 
-//    @Column(name = "auction_item_id")
-//    @NotBlank
-//    Long bid_itemId;
-
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bidder_id", referencedColumnName = "user_id")
     private User bidder;
 
     @Column(name = "bid_time")
-    @NotBlank
+    @NotNull
     private String bidTime; //should be done localTime
 
     @Column(name = "bid_price")
-    @NotBlank
+    @NotNull
     private double bidPrice;
 
-    //    @Column(name = "auction_id")
-//    @NotBlank
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "auction_item_id", referencedColumnName = "auction_ID")
     private Auction auction;

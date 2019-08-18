@@ -64,8 +64,21 @@ public class AuctionRepositoryCustomImpl implements AuctionRepositoryCustom {
             System.out.println(element);
         }
 
-//        List<Auction> auctions = query.getResultList();
         return null;
+    }
+
+    @Override
+    public void deleteAuction(Auction auction) {
+
+        TypedQuery query = (TypedQuery) entityManager.createNativeQuery("delete from autocreatedDB2" +
+                ".auctions_categories where auction_id =?;\n");
+        query.setParameter(1, auction.getId());
+        int deleteCount = query.executeUpdate();
+
+        query = (TypedQuery) entityManager.createNativeQuery("delete FROM autocreatedDB2.auctions where auction_id = ?;");
+        query.setParameter(1, auction.getId());
+        int deleteCount2 = query.executeUpdate();
+
     }
 
     @SuppressWarnings("unchecked")
@@ -81,54 +94,5 @@ public class AuctionRepositoryCustomImpl implements AuctionRepositoryCustom {
         return query.getResultList();
     }
 
-
-//    private Auction parseSQLResultToAuction(Object [] result){
-//        if (!isNull(result)){
-//            //------- From 1 to 5  -----
-//            Long id = (Long) result[0];
-//            String endingTime = (String) result[1];
-//            String itemCountry = (String) result[2];
-//            String item_description = (String) result[3];
-//            String itemLocation = (String) result[4];
-//
-//            //--------- from 6 to 10 -----
-//            String nameOfItem = (String) result[5];
-//            String startedTime = (String) result[6];
-//            Long sellerId = (Long) result[7];
-//            User seller = userRepository.findById(sellerId).orElse(null);
-//            String id = (String) result[8];
-//            String id = (String) result[9];
-//
-//            //--------from 11 to 13 ------
-//            String String = (String) result[10];
-//            String String = (String) result[11];
-//            String String = (String) result[12];
-//
-//        }
-//
-//
-//        return
-//    }
-
-
-//    @Override
-//    @SuppressWarnings("unchecked")
-//    public Auction getAuctionById(String id){
-//        Auction auction= null;
-//        log.info(AUCTION_REPOSITORY_CUSTOM_IMPL + GET_AUCTION_BY_ID + "prepared to call the Database ");
-//
-//        try {
-//            TypedQuery<Auction> query = (TypedQuery<Auction>) entityManager.createNativeQuery("SELECT * FROM "+DATABASE+
-//                    ".auctions where auction_id="+id+";", Auction.class);
-//            auction = query.getSingleResult();
-//            log.info(AUCTION_REPOSITORY_CUSTOM_IMPL + GET_AUCTION_BY_ID + " Database call and cast of objects to type Auction was successful ");
-//            System.out.println(auction);
-//        } catch (Exception e) {
-//            log.error(AUCTION_REPOSITORY_CUSTOM_IMPL + GET_AUCTION_BY_ID + "Failed to call the Database or cast the objects to type Auction ");
-//            ExceptionUtils.getStackTrace(e);
-//        }
-//    return auction;
-//
-//    }
 
 }

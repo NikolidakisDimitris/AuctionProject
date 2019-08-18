@@ -18,6 +18,5 @@ public interface AuctionRepository extends CrudRepository<Auction, Long>, Auctio
 
 //   <Optional> Auction findById(Long id);
 
-//    List<Auction> findByBids(List<Bid> bids);
 
 }
