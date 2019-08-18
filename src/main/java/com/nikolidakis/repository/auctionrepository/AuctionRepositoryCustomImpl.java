@@ -70,15 +70,14 @@ public class AuctionRepositoryCustomImpl implements AuctionRepositoryCustom {
     @Override
     public void deleteAuction(Auction auction) {
 
-        TypedQuery query = (TypedQuery) entityManager.createNativeQuery("delete from autocreatedDB2" +
+        TypedQuery query = (TypedQuery) entityManager.createNativeQuery("delete from " + DATABASE +
                 ".auctions_categories where auction_id =?;\n");
         query.setParameter(1, auction.getId());
         int deleteCount = query.executeUpdate();
 
-        query = (TypedQuery) entityManager.createNativeQuery("delete FROM autocreatedDB2.auctions where auction_id = ?;");
+        query = (TypedQuery) entityManager.createNativeQuery("delete FROM " + DATABASE + ".auctions where auction_id = ?;");
         query.setParameter(1, auction.getId());
         int deleteCount2 = query.executeUpdate();
-
     }
 
     @SuppressWarnings("unchecked")

@@ -38,13 +38,13 @@ public class BidServicesImpl implements BidServices {
 
     }
 
-    //TODO: needs implementation.Has been implemented in the auction controller. Probably Will be removed.
     @Override
     public void newBid(NewBidRequest request) throws AuthenticateException, AuctionException {
         log.info(BID_SERVICES + NEW_BID + " ready to place a new bid");
         User bidder = userServices.findUserByToken(request.getBidderToken());
 
         Auction auction = auctionServices.getAuctionById(request.getAuctionId());
+        //TODO: need to chehck if there is a bid higher or equal to this
         Bid bid = new Bid(null, bidder, LocalDate.now().toString(), request.getBidderValue(), auction);
 
         bidRepository.save(bid);
