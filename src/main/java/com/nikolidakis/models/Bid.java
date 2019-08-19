@@ -36,7 +36,7 @@ public class Bid {
     private double bidPrice;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "auction_item_id", referencedColumnName = "auction_ID")
+    @JoinColumn(name = "auction_item_id", referencedColumnName = "auction_id")
     private Auction auction;
 
     @Override

@@ -82,6 +82,21 @@ public class AuctionServicesImpl implements AuctionServices {
     }
 
 
+    //Method to get all the closed auctions
+    @Override
+    public List<Auction> getClosedAuctions() throws AuctionException {
+        log.info(AUCTION_SERVICES + GET_CLOSED_AUCTIONS + "find all the closed auctions");
+
+        List<Auction> openAuctions = auctionRepository.getOpenAuctions();
+        if (isNull(openAuctions)) {
+            log.error(AUCTION_SERVICES + GET_CLOSED_AUCTIONS + " Null list with auctions");
+            throw new AuctionException("There are no closed auctions at the moment");
+        }
+        log.info(AUCTION_SERVICES + GET_CLOSED_AUCTIONS + "auctions found successfully ");
+        return openAuctions;
+    }
+
+
     //Method to create a new auction
     @Override
     public void newAuction(NewAuctionRequest request) throws AuctionException, AuthenticateException {
@@ -126,15 +141,15 @@ public class AuctionServicesImpl implements AuctionServices {
         System.out.println(request.getFieldName());
         System.out.println(request.getFieldValue());
         switch (request.getFieldName()) {
-            case "category":
+            case "categoryId":
                 ItemCategory category = itemCategoryRepository.findById(Long.parseLong(request.getFieldValue())).orElse(null);
                 auctions = auctionRepository.findByCategories(category);
                 break;
-            case "seller":
+            case "sellerToken":
                 User user = userRepository.findById(Long.parseLong(request.getFieldValue())).orElse(null);
                 auctions = auctionRepository.findBySeller(user);
                 break;
-            case "bidder":
+            case "bidderToken":
                 //find user by the provided token
                 User user1 = userServices.findUserByToken(request.getFieldValue());
 
@@ -199,7 +214,7 @@ public class AuctionServicesImpl implements AuctionServices {
             throw new AuctionException("The auction can not be deleted because this auction has already bids");
         }
 
-        //delete the auction if any bid is open
+        //delete the auction if bids is empty
         log.info(AUCTION_SERVICES + DELETE_AUCTION_BY_ID + " Ready to delete the auction ");
         auction.getCategories().clear();
         auctionRepository.deleteAuction(auction);

@@ -11,7 +11,9 @@ import java.util.List;
 public interface BidServices {
     public List<Bid> getBids();
 
-    void newBid(NewBidRequest request) throws AuthenticateException, AuctionException;
+    void newBid(NewBidRequest request) throws AuthenticateException, AuctionException, BidException;
 
     List<Bid> getBidsByAuction(Long auctionId) throws AuctionException, BidException;
+
+    Bid getHighestBid(long auctionId) throws BidException, AuctionException;
 }

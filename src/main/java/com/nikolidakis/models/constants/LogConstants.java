@@ -12,12 +12,15 @@ public class LogConstants {
     public static final String REGISTER_NEW_USER = "Method registerNewUser > ";
     public static final String AUTHENTICATE_USER = "Method getToken > ";
     public static final String FIND_USER_BY_TOKEN = "Method findUserByToken > ";
+    public static final String RATE_USER_AS_SELLER = "Method rateUserAsSeller > ";
+    public static final String RATE_USER_AS_BIDDER = "Method rateUserAsBidder > ";
 
 
     //Constants for the Auction
     public static final String AUCTION_CONTROLLER = "AuctionController > ";
     public static final String GET_ALL_AUCTIONS = "Method getAllAuctions > ";
     public static final String GET_OPEN_AUCTIONS = "Method getOpenAuctions > ";
+    public static final String GET_CLOSED_AUCTIONS = "Method getClosedAuctions > ";
     public static final String AUCTION_REPOSITORY_CUSTOM_IMPL = "AuctionRepositoryCustomImpl > ";
     public static final String NEW_AUCTION = "Method newAuction > ";
     public static final String AUCTION_SERVICES = "AuctionServices > ";
@@ -41,6 +44,7 @@ public class LogConstants {
     public static final String GET_ALL_BIDS = "Method Get All Bids > ";
     public static final String GET_BIDS_BY_AUCTION_ID = "Method Get Bids By AuctionId > ";
     public static final String NEW_BID = "Method New Bid > ";
+    public static final String GET_HIGHEST_BID_BY_AUCTION = "Method Get Highest bid by auctionId> ";
 
 
 

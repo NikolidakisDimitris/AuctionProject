@@ -15,6 +15,9 @@ public interface AuctionServices {
 
     List<Auction> getOpenAuctions() throws AuctionException;
 
+    List<Auction> getClosedAuctions() throws AuctionException;
+
+
     void newAuction(NewAuctionRequest request) throws AuctionException, AuthenticateException;
 
     Auction getAuctionById(Long auctionId) throws AuctionException;

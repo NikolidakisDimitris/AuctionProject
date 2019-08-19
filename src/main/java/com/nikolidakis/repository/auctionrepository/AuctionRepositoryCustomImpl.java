@@ -46,6 +46,28 @@ public class AuctionRepositoryCustomImpl implements AuctionRepositoryCustom {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public List<Auction> getClosedAuctions() {
+        List<Auction> closedAuctions = null;
+        log.info(AUCTION_REPOSITORY_CUSTOM_IMPL + GET_CLOSED_AUCTIONS + "prepared to call the Database ");
+        try {
+            TypedQuery<Auction> query =
+                    (TypedQuery<Auction>) entityManager.createNativeQuery("SELECT * FROM " + DATABASE + ".Auctions " +
+                            "where ending_time <= curdate();", Auction.class);
+            closedAuctions = query.getResultList();
+            log.info(AUCTION_REPOSITORY_CUSTOM_IMPL + GET_CLOSED_AUCTIONS + " Database call and cast of objects to " +
+                    "type Auction was successful ");
+        } catch (Exception e) {
+            log.error(AUCTION_REPOSITORY_CUSTOM_IMPL + GET_CLOSED_AUCTIONS + "Failed to call the Database or cast the" +
+                    " objects to type Auction ");
+            ExceptionUtils.getStackTrace(e);
+        }
+        return closedAuctions;
+
+
+    }
+
+    @Override
     public Auction findAuctionById(Long id) {
 //        Auction auction = null;
         log.info(AUCTION_REPOSITORY_CUSTOM_IMPL + FIND_AUCTION_BY_ID + "prepared to call the Database ");

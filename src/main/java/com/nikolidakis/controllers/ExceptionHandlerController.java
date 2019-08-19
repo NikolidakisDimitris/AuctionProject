@@ -92,7 +92,7 @@ public class ExceptionHandlerController {
         return new ResponseEntity<>(omResponse, HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE);
     }
 
-    //AuctionException
+    //BidException
     @ExceptionHandler
     public ResponseEntity<Response> itemCategoryException(ItemCategoryException exception) throws JsonProcessingException {
         ErrorResponse omResponse = new ErrorResponse(ITEM_CATEGORY_EXCEPTION, exception.getMessage());
@@ -100,12 +100,19 @@ public class ExceptionHandlerController {
         return new ResponseEntity<>(omResponse, HttpStatus.BAD_REQUEST);
     }
 
-    //AuctionException
+    //BidException
     @ExceptionHandler
-    public ResponseEntity<Response> itemCategoryException(BidException exception) throws JsonProcessingException {
+    public ResponseEntity<Response> bidException(BidException exception) throws JsonProcessingException {
         ErrorResponse omResponse = new ErrorResponse(BID_EXCEPTION, exception.getMessage());
         log.info("Returning output: {}", jsonMapper.writeValueAsString(omResponse));
         return new ResponseEntity<>(omResponse, HttpStatus.BAD_REQUEST);
     }
 
+    //RateException
+    @ExceptionHandler
+    public ResponseEntity<Response> rateException(RateException exception) throws JsonProcessingException {
+        ErrorResponse omResponse = new ErrorResponse(BID_EXCEPTION, exception.getMessage());
+        log.info("Returning output: {}", jsonMapper.writeValueAsString(omResponse));
+        return new ResponseEntity<>(omResponse, HttpStatus.BAD_REQUEST);
+    }
 }

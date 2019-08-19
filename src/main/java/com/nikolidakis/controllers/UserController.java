@@ -1,10 +1,10 @@
 package com.nikolidakis.controllers;
 
-import com.nikolidakis.exceptions.AuthenticateException;
-import com.nikolidakis.exceptions.UserException;
+import com.nikolidakis.exceptions.*;
 import com.nikolidakis.models.User;
 import com.nikolidakis.requests.AuthenticateUserRequest;
 import com.nikolidakis.requests.GetUserByIdRequest;
+import com.nikolidakis.requests.RateUserRequest;
 import com.nikolidakis.requests.RegisterNewUserRequest;
 import com.nikolidakis.responses.AllUsersResponse;
 import com.nikolidakis.responses.AuthenticationResponse;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static com.nikolidakis.models.constants.LogConstants.RATE_USER_AS_SELLER;
 import static com.nikolidakis.models.constants.LogConstants.USER_CONTROLER;
 import static com.nikolidakis.models.constants.StatusCodes.SUCCESS;
 
@@ -70,6 +71,18 @@ public class UserController {
         User user = services.findUserById(request.getId());
         log.info(USER_CONTROLER + "User found successful");
         return user;
+    }
+
+    @PostMapping(value = "/rateuser",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response rateUserAsSeller(@Valid @RequestBody RateUserRequest request) throws AuthenticateException,
+            AuctionException, BidException, RateException, UserException {
+        log.info(USER_CONTROLER + RATE_USER_AS_SELLER + "Ready to rate the seller of the auction");
+        String userOrSeller = services.rateUser(request.getUserToken(), request.getUserToBeRated(),
+                request.getAuction(), request.getRate());
+        log.info(USER_CONTROLER + RATE_USER_AS_SELLER + "Rating of {} completed successfully", userOrSeller);
+        return new Response(SUCCESS, userOrSeller + " rated successfully");
     }
 
 }

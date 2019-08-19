@@ -1,6 +1,5 @@
 package com.nikolidakis.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    @JsonIgnore(value = true)
+//    @JsonIgnore(value = true)
     Long id; // primary key
 
     @Column(name = "username")
@@ -83,10 +82,16 @@ public class User {
     @Max(5)
     private int bidderRating;
 
+    @Column(name = "bidder_rating_votes")
+    private long bidderRatingVotes;
+
     @Column(name = "sellerRating")
     @Min(0)
     @Max(5)
     private int sellerRating;
+
+    @Column(name = "seller_rating_votes")
+    private long sellerRatingVotes;
 
     public User(Long id, @NotBlank @Size(max = 30) String username, @NotBlank @Size(max = 512) String password,
                 @NotBlank @Size(max = 30) String firstName, @NotBlank @Size(max = 30) String lastName,
