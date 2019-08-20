@@ -47,7 +47,6 @@ public class ItemCategoryController {
         return new CategoriesResponse(SUCCESS, "Successful return of the categories", categoryList);
     }
 
-    //TODO: needs bug fix
     @PostMapping(value = "/getcategorybyid",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

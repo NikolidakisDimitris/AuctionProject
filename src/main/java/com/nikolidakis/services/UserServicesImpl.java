@@ -130,7 +130,6 @@ public class UserServicesImpl implements UserServices {
         }
 
         //check if the auction is still open -> Open auctions can not be rated
-
         int year = Integer.parseInt(auction.getEndingTime().substring(0, 4));
         int month = Integer.parseInt(auction.getEndingTime().substring(5, 7));
         int day = Integer.parseInt(auction.getEndingTime().substring(8, 10));

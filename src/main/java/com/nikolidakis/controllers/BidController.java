@@ -7,6 +7,7 @@ import com.nikolidakis.models.Bid;
 import com.nikolidakis.requests.GetBidsOrHighestBidByAuctionRequest;
 import com.nikolidakis.requests.NewBidRequest;
 import com.nikolidakis.responses.BidResponse;
+import com.nikolidakis.responses.BidsListResponse;
 import com.nikolidakis.responses.Response;
 import com.nikolidakis.services.BidServices;
 import lombok.Data;
@@ -38,9 +39,11 @@ public class BidController {
      * Get All Bids. Just for testing
      */
     @RequestMapping("/allbids")
-    public List<Bid> allBids() {
+    public Response allBids() {
         log.info(BID_CONROLLER + GET_ALL_BIDS);
-        return services.getBids();
+        List<Bid> bids = services.getBids();
+        log.info(BID_CONROLLER + GET_ALL_BIDS + "Found all the bids ");
+        return new BidsListResponse(SUCCESS, "Found all the bids ", bids);
     }
 
 
@@ -54,12 +57,12 @@ public class BidController {
     @PostMapping(value = "/getbidsbyauction",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Bid> getBidsByAuction(@Valid @RequestBody GetBidsOrHighestBidByAuctionRequest request) throws AuctionException, BidException {
+    public Response getBidsByAuction(@Valid @RequestBody GetBidsOrHighestBidByAuctionRequest request) throws AuctionException, BidException {
         log.info(BID_CONROLLER + GET_BIDS_BY_AUCTION_ID + " ready to find the auctions by the bid");
-        services.getBidsByAuction(request.getAuctionId());
+        List<Bid> bids = services.getBidsByAuction(request.getAuctionId());
 
         log.info(BID_CONROLLER + GET_BIDS_BY_AUCTION_ID + " found the bids successfully");
-        return services.getBidsByAuction(request.getAuctionId());
+        return new BidsListResponse(SUCCESS, "Found the bids of auction " + request.getAuctionId() + "successfully", bids);
     }
 
     /**
@@ -81,7 +84,7 @@ public class BidController {
     }
 
 
-    @PostMapping(value = "/gethighestbid",
+    @PostMapping(value = "/gethighestbidbyauction",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Response getHighestBidByAuction(@Valid @RequestBody GetBidsOrHighestBidByAuctionRequest request) throws BidException, AuctionException {

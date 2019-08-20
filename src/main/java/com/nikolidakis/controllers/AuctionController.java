@@ -102,7 +102,6 @@ public class AuctionController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Response getAuctionById(@Valid @RequestBody GetAuctionRequest request) throws AuctionException {
-        System.out.println(request);
         log.info(AUCTION_CONTROLLER + GET_AUCTION_BY_ID + "ready to create a new auction");
         Auction auction = services.getAuctionById(request.getAuctionId());
         log.info(AUCTION_CONTROLLER + GET_AUCTION_BY_ID + "suction returned Successfully");
@@ -128,6 +127,15 @@ public class AuctionController {
         return new AuctionsListResponse(SUCCESS, "Auction returned Successfully", auctions);
     }
 
+
+    /**
+     * Method to delete an auction only if it has no bids .
+     *
+     * @param request
+     * @return
+     * @throws AuthenticateException
+     * @throws AuctionException
+     */
     @PostMapping(value = "/deleteauctionbyid",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

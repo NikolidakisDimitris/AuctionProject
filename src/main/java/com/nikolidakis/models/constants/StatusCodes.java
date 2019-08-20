@@ -15,6 +15,8 @@ public class StatusCodes {
     public static final String ITEM_CATEGORY_EXCEPTION = "ITEM CATEGORY EXCEPTION";
 
     public static final String BID_EXCEPTION = "BID EXCEPTION";
+    public static final String RATE_EXCEPTION = "RATE EXCEPTION";
+    public static final String MESSAGE_EXCEPTION = "MESSAGE EXCEPTION";
 
 
 }

@@ -111,7 +111,15 @@ public class ExceptionHandlerController {
     //RateException
     @ExceptionHandler
     public ResponseEntity<Response> rateException(RateException exception) throws JsonProcessingException {
-        ErrorResponse omResponse = new ErrorResponse(BID_EXCEPTION, exception.getMessage());
+        ErrorResponse omResponse = new ErrorResponse(RATE_EXCEPTION, exception.getMessage());
+        log.info("Returning output: {}", jsonMapper.writeValueAsString(omResponse));
+        return new ResponseEntity<>(omResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    //MessageException
+    @ExceptionHandler
+    public ResponseEntity<Response> msgException(MessageException exception) throws JsonProcessingException {
+        ErrorResponse omResponse = new ErrorResponse(MESSAGE_EXCEPTION, exception.getMessage());
         log.info("Returning output: {}", jsonMapper.writeValueAsString(omResponse));
         return new ResponseEntity<>(omResponse, HttpStatus.BAD_REQUEST);
     }

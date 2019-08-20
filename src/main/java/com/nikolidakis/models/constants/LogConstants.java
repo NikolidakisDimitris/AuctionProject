@@ -46,9 +46,17 @@ public class LogConstants {
     public static final String NEW_BID = "Method New Bid > ";
     public static final String GET_HIGHEST_BID_BY_AUCTION = "Method Get Highest bid by auctionId> ";
 
+    //Constants for the message system
+    public static final String MESSAGE_CONTROLLER = "Message Controller > ";
+    public static final String MESSAGE_SERVICES = "Message Services > ";
+    public static final String GET_ALL_MESSAGES = "Method getAllMessages > ";
+    public static final String GET_USER_INBOX = "Method getUserInbox > ";
+    public static final String GET_USER_SENT_MSG = "Method getUserMessages > ";
+    public static final String SENDING_NEW_MESSAGE = "Method sendingNewMessage  > ";
 
 
     //General Errors
     public static final String CLIENTERROR = "Request is not valid.";
+
 
 }
