@@ -22,6 +22,10 @@ public class Message {
     @Column(name = "message_id")
     private Long messageId;
 
+    @Column(name = "message_time")
+    @NotNull
+    private String messageTime;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "senderId", referencedColumnName = "user_id")
     private User sender;

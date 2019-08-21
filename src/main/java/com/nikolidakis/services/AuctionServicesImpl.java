@@ -105,6 +105,7 @@ public class AuctionServicesImpl implements AuctionServices {
         //find the user who wants to open a new auction
         User user = userServices.findUserByToken(request.getToken());
 
+        //TODO: Need to check this one if it is gonna be used or not
         // SAVE ANY NEW CATEGORY
         if (request.getCategories() != null && !request.getCategories().isEmpty()) {
             for (ItemCategory category : request.getCategories()) {
@@ -130,12 +131,17 @@ public class AuctionServicesImpl implements AuctionServices {
     public Auction getAuctionById(Long auctionId) throws AuctionException {
         log.info(AUCTION_SERVICES + GET_AUCTION_BY_ID + "find auctions by ID");
         Auction auction = auctionRepository.findById(auctionId).orElse(null);
-        log.info(AUCTION_SERVICES + GET_AUCTION_BY_ID + "auction found successfully ");
-        return auction;
+        if (!isNull(auction)) {
+            log.info(AUCTION_SERVICES + GET_AUCTION_BY_ID + "auction found successfully ");
+            return auction;
+        } else {
+            log.info(AUCTION_SERVICES + GET_AUCTION_BY_ID + "auction is null. No auction with this id");
+            throw new AuctionException("There is no auction with this id");
+        }
     }
 
     @Override
-    public List<Auction> getAuctionsByField(GetAuctionsByFieldRequest request) throws AuthenticateException {
+    public List<Auction> getAuctionsByField(GetAuctionsByFieldRequest request) throws AuthenticateException, AuctionException {
         log.info(AUCTION_SERVICES + GET_AUCTIONS_BY_FIELD + "find auctions by " + request.getFieldName());
         List<Auction> auctions = new ArrayList<>();
         System.out.println(request.getFieldName());
@@ -145,7 +151,7 @@ public class AuctionServicesImpl implements AuctionServices {
                 ItemCategory category = itemCategoryRepository.findById(Long.parseLong(request.getFieldValue())).orElse(null);
                 auctions = auctionRepository.findByCategories(category);
                 break;
-            case "sellerToken":
+            case "sellerId":
                 User user = userRepository.findById(Long.parseLong(request.getFieldValue())).orElse(null);
                 auctions = auctionRepository.findBySeller(user);
                 break;
@@ -164,6 +170,9 @@ public class AuctionServicesImpl implements AuctionServices {
                     System.out.println("Auction is " + current);
                 }
                 auctions.addAll(auctionSet);
+                break;
+            default:
+                throw new AuctionException("Wrong field name");
         }
         return auctions;
     }

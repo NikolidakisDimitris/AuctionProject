@@ -1,5 +1,6 @@
 package com.nikolidakis.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,6 +34,7 @@ public class User {
     @Column(name = "password")
     @NotBlank
     @Size(max = 512)
+    @JsonIgnore(value = true)
     private String password;
 
     @Column(name = "firstname")
@@ -75,6 +77,7 @@ public class User {
     @Column(name = "afm")
     @NotBlank
     @Size(max = 30)
+    @JsonIgnore(value = true)
     private String afm;
 
     @Column(name = "bidder_rating")

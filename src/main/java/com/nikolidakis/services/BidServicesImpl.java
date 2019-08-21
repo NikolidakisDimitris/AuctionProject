@@ -8,6 +8,7 @@ import com.nikolidakis.models.Bid;
 import com.nikolidakis.models.User;
 import com.nikolidakis.repository.BidRepository;
 import com.nikolidakis.requests.NewBidRequest;
+import com.nikolidakis.utils.Utils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,12 @@ public class BidServicesImpl implements BidServices {
         if (isNull(auction) || isNull(auction.getId())) {
             throw new AuctionException("This auction doesn't exist");
         }
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime endingTime = Utils.stringDateToLocalDate(auction.getEndingTime());
+
+        if (now.isAfter(endingTime)) {
+            throw new BidException("This auction is closed, so no bid can not be registered now");
+        }
 
         //Get the bids for this auction and check if there is any higher bid
         List<Bid> bids = getBidsByAuction(auction.getId());
@@ -59,7 +66,7 @@ public class BidServicesImpl implements BidServices {
             }
         }
 
-        Bid bid = new Bid(null, bidder, LocalDateTime.now().toString(), request.getBidderValue(), auction);
+        Bid bid = new Bid(null, bidder, now.toString(), request.getBidderValue(), auction);
 
         bidRepository.save(bid);
         log.info(BID_SERVICES + NEW_BID + " ready to place a new bid");

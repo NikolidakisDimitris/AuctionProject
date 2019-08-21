@@ -8,14 +8,13 @@ import com.nikolidakis.models.Auction;
 import com.nikolidakis.models.Message;
 import com.nikolidakis.models.User;
 import com.nikolidakis.repository.MessageRepository;
+import com.nikolidakis.utils.Utils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 import static com.nikolidakis.models.constants.LogConstants.*;
@@ -56,16 +55,7 @@ public class MessageServicesImpl implements MessageServices {
         User receiver = null;
 
         //check if the auction has ended
-        int year = Integer.parseInt(auction.getEndingTime().substring(0, 4));
-        int month = Integer.parseInt(auction.getEndingTime().substring(5, 7));
-        int day = Integer.parseInt(auction.getEndingTime().substring(8, 10));
-        LocalDate date = LocalDate.of(year, month, day);
-
-        int hour = Integer.parseInt(auction.getEndingTime().substring(11, 13));
-        int mins = Integer.parseInt(auction.getEndingTime().substring(14));
-        LocalTime time = LocalTime.of(hour, mins, 0, 0);
-
-        LocalDateTime endingTime = LocalDateTime.of(date, time);
+        LocalDateTime endingTime = Utils.stringDateToLocalDate(auction.getEndingTime());
 
         LocalDateTime now = LocalDateTime.now();
 
@@ -83,7 +73,7 @@ public class MessageServicesImpl implements MessageServices {
             log.info(MESSAGE_SERVICES + SENDING_NEW_MESSAGE + "The bidder want to sent to the seller. Sender " +
                     "= bidder . Receiver = seller");
             //Receiver =  seller
-            receiver = auction.getSeller();
+            receiver = userServices.findUserById(auction.getSeller().getId());
         }
 
         //2. check if the user who is going to sent the msg is the seller, and the receiver is the winner
@@ -100,7 +90,8 @@ public class MessageServicesImpl implements MessageServices {
 
         //Sent the message
         String msgSubject = "Auction id " + auction.getId() + " : " + subject;
-        Message messageObj = new Message(null, currentUser, receiver, msgSubject, message);
+        Message messageObj = new Message(null, LocalDateTime.now().toString(), currentUser, receiver, msgSubject,
+                message);
         log.info(MESSAGE_SERVICES + SENDING_NEW_MESSAGE + "Ready to save the new message");
         Message savedMsg = messageRepository.save(messageObj);
         log.info(MESSAGE_SERVICES + SENDING_NEW_MESSAGE + "Message from {} to {} saved successfully",

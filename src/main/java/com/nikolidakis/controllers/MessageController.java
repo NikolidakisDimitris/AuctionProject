@@ -61,7 +61,7 @@ public class MessageController {
     @PostMapping(value = "/getinbox",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Response getInbox(GetUserMsgsRequest request) throws AuthenticateException {
+    public Response getInbox(@Valid @RequestBody GetUserMsgsRequest request) throws AuthenticateException {
         log.info(MESSAGE_CONTROLLER + GET_USER_INBOX + "Ready to get the user inbox ");
         List<Message> messages = messageServices.getInbox(request.getToken());
         log.info(MESSAGE_CONTROLLER + GET_USER_INBOX + "user inbox fetched successfully");
@@ -72,9 +72,9 @@ public class MessageController {
     @PostMapping(value = "/getsent",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Response getSentMsgs(GetUserMsgsRequest request) throws AuthenticateException {
+    public Response getSentMsgs(@Valid @RequestBody GetUserMsgsRequest request) throws AuthenticateException {
         log.info(MESSAGE_CONTROLLER + GET_USER_SENT_MSG + "Ready to get the sent messages ");
-        List<Message> messages = messageServices.getInbox(request.getToken());
+        List<Message> messages = messageServices.getSentMsgs(request.getToken());
         log.info(MESSAGE_CONTROLLER + GET_USER_SENT_MSG + "sent messages fetched successfully");
         return new MessagesResponse(SUCCESS, "Sent messages retrieved successfully", messages);
     }

@@ -120,7 +120,7 @@ public class AuctionController {
     @PostMapping(value = "/getauctionsbyfield",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Response getAuctionsByField(@Valid @RequestBody GetAuctionsByFieldRequest request) throws AuthenticateException {
+    public Response getAuctionsByField(@Valid @RequestBody GetAuctionsByFieldRequest request) throws AuthenticateException, AuctionException {
         log.info(AUCTION_CONTROLLER + GET_AUCTIONS_BY_FIELD + "ready get the auctions by " + request.getFieldName());
         List<Auction> auctions = services.getAuctionsByField(request);
         log.info(AUCTION_CONTROLLER + GET_AUCTIONS_BY_FIELD + "auctions returned Successfully");

@@ -22,7 +22,7 @@ public interface AuctionServices {
 
     Auction getAuctionById(Long auctionId) throws AuctionException;
 
-    List<Auction> getAuctionsByField(GetAuctionsByFieldRequest request) throws AuthenticateException;
+    List<Auction> getAuctionsByField(GetAuctionsByFieldRequest request) throws AuthenticateException, AuctionException;
 
     void newBid(NewBidRequest request) throws AuthenticateException, AuctionException;
 
