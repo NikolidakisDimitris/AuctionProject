@@ -123,4 +123,13 @@ public class ExceptionHandlerController {
         log.info("Returning output: {}", jsonMapper.writeValueAsString(omResponse));
         return new ResponseEntity<>(omResponse, HttpStatus.BAD_REQUEST);
     }
+
+    //MessageException
+    @ExceptionHandler
+    public ResponseEntity<Response> imageException(ImageException exception) throws JsonProcessingException {
+        ErrorResponse omResponse = new ErrorResponse(IMAGE_EXCEPTION, exception.getMessage());
+        log.info("Returning output: {}", jsonMapper.writeValueAsString(omResponse));
+        return new ResponseEntity<>(omResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }

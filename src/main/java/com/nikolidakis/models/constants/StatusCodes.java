@@ -18,5 +18,7 @@ public class StatusCodes {
     public static final String RATE_EXCEPTION = "RATE EXCEPTION";
     public static final String MESSAGE_EXCEPTION = "MESSAGE EXCEPTION";
 
+    public static final String IMAGE_EXCEPTION = "IMAGE EXCEPTION";
+
 
 }

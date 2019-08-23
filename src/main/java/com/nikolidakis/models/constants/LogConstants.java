@@ -54,6 +54,15 @@ public class LogConstants {
     public static final String GET_USER_SENT_MSG = "Method getUserMessages > ";
     public static final String SENDING_NEW_MESSAGE = "Method sendingNewMessage  > ";
 
+    //Images System
+    public static final String IMAGE_CONTROLLER = "Image Controller  > ";
+    public static final String IMAGE_SERVICES = "Image Services  > ";
+    public static final String UPLOAD_IMAGE = "Method UploadImage  > ";
+    public static final String GET_IMAGES = "Method getImages  > ";
+    public static final String AUCTION_IMAGE_REPOSITORY_CUSTOM_IMPL = "Auction Image Repository Custom Impl > ";
+    public static final String FIND_ALL_IMAGE_PATHS_FOR_AUCTION_ID = "Method findAllImagePathsForAuctionId > ";
+
+
 
     //General Errors
     public static final String CLIENTERROR = "Request is not valid.";
