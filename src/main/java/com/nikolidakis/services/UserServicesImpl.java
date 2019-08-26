@@ -5,7 +5,6 @@ import com.nikolidakis.models.Auction;
 import com.nikolidakis.models.Bid;
 import com.nikolidakis.models.User;
 import com.nikolidakis.repository.UserRepository;
-import com.nikolidakis.requests.AuthenticateUserRequest;
 import com.nikolidakis.requests.RegisterNewUserRequest;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +45,7 @@ public class UserServicesImpl implements UserServices {
 
     //Register a new User
     @Override
-    public void registerNewUser(RegisterNewUserRequest request) throws UserException {
+    public User registerNewUser(RegisterNewUserRequest request) throws UserException {
         //search the DB for this username
         log.info(USER_SERVICE + REGISTER_NEW_USER + "Ready to call the DB to check is the username {} exists",
                 request.getUsername());
@@ -64,17 +63,18 @@ public class UserServicesImpl implements UserServices {
                 request.getAddress(), request.getAfm());
 
         //save to the DB the new user
-        User registerNewUser = userRepository.save(user);
-        log.info(USER_SERVICE + REGISTER_NEW_USER + " User " + registerNewUser.getUsername() + "saved successfully");
+        User newUser = userRepository.save(user);
+        log.info(USER_SERVICE + REGISTER_NEW_USER + " User " + newUser.getUsername() + "saved successfully");
+        return newUser;
     }
 
     //Find all the users
     @Override
-    public String getToken(AuthenticateUserRequest request) throws AuthenticateException {
-        System.out.println(md5(request.getPassword()));
+    public String getToken(String username, String password) throws AuthenticateException {
+        System.out.println(md5(password));
 
         log.info(USER_SERVICE + AUTHENTICATE_USER + "Ready to call the DB to authenticate the user");
-        User user = userRepository.findByUsernameAndPassword(request.getUsername(), request.getPassword());
+        User user = userRepository.findByUsernameAndPassword(username, password);
         System.out.println(user);
         if (isNull(user)) {
             log.error(USER_SERVICE + AUTHENTICATE_USER + "There is no such user");

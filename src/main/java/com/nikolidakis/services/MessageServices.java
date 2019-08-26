@@ -21,4 +21,8 @@ public interface MessageServices {
 
     public List<Message> getSentMsgs(String token) throws AuthenticateException;
 
+    public List<Message> getUnreadMsgs(String token) throws AuthenticateException;
+
+
+
 }

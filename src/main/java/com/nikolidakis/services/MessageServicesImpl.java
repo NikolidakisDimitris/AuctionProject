@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.nikolidakis.models.constants.LogConstants.*;
@@ -91,7 +92,7 @@ public class MessageServicesImpl implements MessageServices {
         //Sent the message
         String msgSubject = "Auction id " + auction.getId() + " : " + subject;
         Message messageObj = new Message(null, LocalDateTime.now().toString(), currentUser, receiver, msgSubject,
-                message);
+                message, false);
         log.info(MESSAGE_SERVICES + SENDING_NEW_MESSAGE + "Ready to save the new message");
         Message savedMsg = messageRepository.save(messageObj);
         log.info(MESSAGE_SERVICES + SENDING_NEW_MESSAGE + "Message from {} to {} saved successfully",
@@ -123,5 +124,18 @@ public class MessageServicesImpl implements MessageServices {
         log.info(MESSAGE_SERVICES + GET_USER_SENT_MSG + "Fetched successfully the sent messages");
 
         return messages;
+    }
+
+    @Override
+    public List<Message> getUnreadMsgs(String token) throws AuthenticateException {
+        List<Message> inbox = getInbox(token);
+        List<Message> unreadMsgs = new ArrayList<>();
+        for (Message current : inbox) {
+            if (!current.isRead()) {
+                unreadMsgs.add(current);
+            }
+        }
+
+        return unreadMsgs;
     }
 }

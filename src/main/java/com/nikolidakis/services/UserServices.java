@@ -3,7 +3,6 @@ package com.nikolidakis.services;
 import com.nikolidakis.exceptions.*;
 import com.nikolidakis.models.Auction;
 import com.nikolidakis.models.User;
-import com.nikolidakis.requests.AuthenticateUserRequest;
 import com.nikolidakis.requests.RegisterNewUserRequest;
 
 import java.util.List;
@@ -14,9 +13,9 @@ public interface UserServices {
 
     User findUserById(Long id);
 
-    String getToken(AuthenticateUserRequest request) throws AuthenticateException;
+    String getToken(String username, String password) throws AuthenticateException;
 
-    void registerNewUser(RegisterNewUserRequest request) throws UserException;
+    User registerNewUser(RegisterNewUserRequest request) throws UserException;
 
     User findUserByToken(String token) throws AuthenticateException;
 

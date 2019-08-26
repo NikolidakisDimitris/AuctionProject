@@ -2,6 +2,7 @@ package com.nikolidakis.services;
 
 import com.nikolidakis.exceptions.AuctionException;
 import com.nikolidakis.exceptions.AuthenticateException;
+import com.nikolidakis.exceptions.ItemCategoryException;
 import com.nikolidakis.models.Auction;
 import com.nikolidakis.models.Bid;
 import com.nikolidakis.models.ItemCategory;
@@ -99,26 +100,24 @@ public class AuctionServicesImpl implements AuctionServices {
 
     //Method to create a new auction
     @Override
-    public void newAuction(NewAuctionRequest request) throws AuctionException, AuthenticateException {
+    public void newAuction(NewAuctionRequest request) throws AuctionException, AuthenticateException, ItemCategoryException {
         log.info(AUCTION_SERVICES + NEW_AUCTION + " ready to open a new auction");
 
         //find the user who wants to open a new auction
         User user = userServices.findUserByToken(request.getToken());
 
-        //TODO: Need to check this one if it is gonna be used or not
-        // SAVE ANY NEW CATEGORY
-        if (request.getCategories() != null && !request.getCategories().isEmpty()) {
-            for (ItemCategory category : request.getCategories()) {
-                if (category != null && category.getCategoryId() == null) {
-                    category = itemCategoryRepository.save(category);
-                }
+        //check if any of the categories doesn't exist. If even one is missing then throw exception
+        List<ItemCategory> dbCatedories = (List<ItemCategory>) itemCategoryRepository.findAll();
+        for (ItemCategory current : request.getCategories()) {
+            if (!dbCatedories.contains(current)) {
+                throw new ItemCategoryException("Category : \"" + current.getCategoryName() + "\" doesn't exist");
             }
         }
 
         //create the auction item, in order to save it in the database
         Auction auction = new Auction(null, request.getNameOfItem(), user, request.getStartedTime(),
-                request.getEndingTime(), request.getItemDescription(), request.getItemLocation(),
-                request.getItemCountry(), request.getCategories());
+                request.getEndingTime(), request.getItemDescription(), user.getCity(),
+                user.getCountry(), request.getInitialPrice(), request.getCategories());
 
         // save the new auction to the database
         log.info(auction.toString());
@@ -170,6 +169,27 @@ public class AuctionServicesImpl implements AuctionServices {
                     System.out.println("Auction is " + current);
                 }
                 auctions.addAll(auctionSet);
+                break;
+            default:
+                throw new AuctionException("Wrong field name");
+        }
+        return auctions;
+    }
+
+    @Override
+    public List<Auction> getAuctionsByField(String fieldName, String fieldValue) throws AuthenticateException, AuctionException {
+        log.info(AUCTION_SERVICES + GET_AUCTIONS_BY_FIELD + "find auctions by " + fieldName);
+        List<Auction> auctions = new ArrayList<>();
+        System.out.println(fieldName);
+        System.out.println(fieldValue);
+        switch (fieldName) {
+            case "categoryId":
+                ItemCategory category = itemCategoryRepository.findById(Long.parseLong(fieldValue)).orElse(null);
+                auctions = auctionRepository.findByCategories(category);
+                break;
+            case "sellerId":
+                User user = userRepository.findById(Long.parseLong(fieldValue)).orElse(null);
+                auctions = auctionRepository.findBySeller(user);
                 break;
             default:
                 throw new AuctionException("Wrong field name");

@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Message {
 
     @Id
@@ -41,6 +40,9 @@ public class Message {
     @Column(name = "message")
     @NotNull
     private String message;
+
+    @Column(name = "is_read")
+    private boolean isRead;
 
     //Maybe i can add a field to show if a message is read or not
 

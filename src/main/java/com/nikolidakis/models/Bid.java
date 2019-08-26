@@ -1,5 +1,6 @@
 package com.nikolidakis.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,6 +38,7 @@ public class Bid {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "auction_item_id", referencedColumnName = "auction_id")
+    @JsonBackReference
     private Auction auction;
 
     @Override

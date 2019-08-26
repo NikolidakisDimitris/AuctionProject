@@ -3,7 +3,6 @@ package com.nikolidakis.controllers;
 import com.nikolidakis.exceptions.AuctionException;
 import com.nikolidakis.exceptions.AuthenticateException;
 import com.nikolidakis.exceptions.ImageException;
-import com.nikolidakis.requests.GetImageRequest;
 import com.nikolidakis.responses.GetImagesResponse;
 import com.nikolidakis.responses.Response;
 import com.nikolidakis.services.ImageServices;
@@ -42,11 +41,11 @@ public class AuctionImageController {
         return new Response(SUCCESS, "The image has been saved successfully");
     }
 
-    @PostMapping(value = "/getimages",
+    @GetMapping(value = "/getimages",
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Response getImages(@Valid @RequestBody GetImageRequest request) throws IOException, ImageException {
+    public Response getImages(@Valid @RequestBody long auctionId) throws IOException, ImageException {
         log.info(IMAGE_CONTROLLER + UPLOAD_IMAGE + "Ready to get the image message");
-        List<byte[]> images = imageServicesImpl.getImages(request.getAuctionId());
+        List<byte[]> images = imageServicesImpl.getImages(auctionId);
         log.info(IMAGE_CONTROLLER + UPLOAD_IMAGE + "The image/images has been retrieved successfully");
         return new GetImagesResponse(SUCCESS, "Array of bytes with the Images has been returned successfully", images);
     }

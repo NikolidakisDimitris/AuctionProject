@@ -26,11 +26,17 @@ import java.util.List;
 import static com.nikolidakis.models.constants.LogConstants.*;
 import static com.nikolidakis.models.constants.StatusCodes.SUCCESS;
 
+
+//TODO: Needs to implement logic when a message is read or not. When the sent are fetched , then do i have to set the
+// isRead to true ???
+
+
 @RestController
 @RequestMapping("/message")
 @Data
 @Slf4j
 public class MessageController {
+
 
     @Autowired
     private MessageServices messageServices;
@@ -68,7 +74,6 @@ public class MessageController {
         return new MessagesResponse(SUCCESS, "The inbox retrieved successfully", messages);
     }
     //Method to get the sent messages
-
     @PostMapping(value = "/getsent",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -79,8 +84,15 @@ public class MessageController {
         return new MessagesResponse(SUCCESS, "Sent messages retrieved successfully", messages);
     }
 
-
-    //method
-
+    //method to get all the Users unreadMessages
+    @PostMapping(value = "/getunreadmessages",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response getUnreadMsgs(@Valid @RequestBody GetUserMsgsRequest request) throws AuthenticateException {
+        log.info(MESSAGE_CONTROLLER + GET_USER_SENT_MSG + "Ready to get the unread inbox messages");
+        List<Message> messages = messageServices.getUnreadMsgs(request.getToken());
+        log.info(MESSAGE_CONTROLLER + GET_USER_SENT_MSG + "unread messages fetched successfully");
+        return new MessagesResponse(SUCCESS, "Unread messages retrieved successfully", messages);
+    }
 
 }

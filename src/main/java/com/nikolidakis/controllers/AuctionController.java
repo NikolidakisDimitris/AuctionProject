@@ -2,25 +2,24 @@ package com.nikolidakis.controllers;
 
 import com.nikolidakis.exceptions.AuctionException;
 import com.nikolidakis.exceptions.AuthenticateException;
+import com.nikolidakis.exceptions.ItemCategoryException;
 import com.nikolidakis.models.Auction;
 import com.nikolidakis.requests.DeleteAuctioById;
-import com.nikolidakis.requests.GetAuctionRequest;
 import com.nikolidakis.requests.GetAuctionsByFieldRequest;
 import com.nikolidakis.requests.NewAuctionRequest;
-import com.nikolidakis.responses.AuctionResponse;
 import com.nikolidakis.responses.AuctionsListResponse;
 import com.nikolidakis.responses.Response;
 import com.nikolidakis.services.AuctionServices;
+import com.nikolidakis.services.BidServices;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.nikolidakis.models.constants.LogConstants.*;
@@ -38,6 +37,9 @@ public class AuctionController {
 
     @Autowired
     private AuctionServices services;
+
+    @Autowired
+    private BidServices bidServices;
 
     /**
      * Method to get ALL the auctions that exist  in the database, even those that are not open now.
@@ -81,7 +83,7 @@ public class AuctionController {
     @PostMapping(value = "/newauction",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Response newAuction(@Valid @RequestBody NewAuctionRequest request) throws AuctionException, AuthenticateException {
+    public Response newAuction(@Valid @RequestBody NewAuctionRequest request) throws AuctionException, AuthenticateException, ItemCategoryException {
         log.info(AUCTION_CONTROLLER + NEW_AUCTION + "ready to create a new auction");
         log.info(request.toString());
         services.newAuction(request);
@@ -94,18 +96,20 @@ public class AuctionController {
      *
      * Method to get A specific Auction by its id,
      *
-     * @param request
+     * @param #auctionId
      * @return
      * @throws AuctionException
      */
-    @PostMapping(value = "/getauctionbyid",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public Response getAuctionById(@Valid @RequestBody GetAuctionRequest request) throws AuctionException {
+    @GetMapping(value = "/getauctionbyid")
+    public Response getAuctionById(@NotBlank @RequestParam long auctionId) throws AuctionException {
         log.info(AUCTION_CONTROLLER + GET_AUCTION_BY_ID + "ready to create a new auction");
-        Auction auction = services.getAuctionById(request.getAuctionId());
-        log.info(AUCTION_CONTROLLER + GET_AUCTION_BY_ID + "suction returned Successfully");
-        return new AuctionResponse(SUCCESS, "Auction returned Successfully", auction);
+        Auction auction = services.getAuctionById(auctionId);
+
+        List<Auction> auctions = new ArrayList<>();
+        auctions.add(auction);
+
+        log.info(AUCTION_CONTROLLER + GET_AUCTION_BY_ID + "Auction returned Successfully");
+        return new AuctionsListResponse(SUCCESS, "Auction returned Successfully", auctions);
     }
 
 
@@ -120,12 +124,26 @@ public class AuctionController {
     @PostMapping(value = "/getauctionsbyfield",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Response getAuctionsByField(@Valid @RequestBody GetAuctionsByFieldRequest request) throws AuthenticateException, AuctionException {
+    public Response getAuctionsByFieldPost(@Valid @RequestBody GetAuctionsByFieldRequest request) throws AuthenticateException, AuctionException {
         log.info(AUCTION_CONTROLLER + GET_AUCTIONS_BY_FIELD + "ready get the auctions by " + request.getFieldName());
+        AuctionsListResponse response = new AuctionsListResponse();
         List<Auction> auctions = services.getAuctionsByField(request);
         log.info(AUCTION_CONTROLLER + GET_AUCTIONS_BY_FIELD + "auctions returned Successfully");
         return new AuctionsListResponse(SUCCESS, "Auction returned Successfully", auctions);
     }
+
+
+    @GetMapping(value = "/getauctionsbyfield")
+    public Response getAuctionsByFieldGet(@NotBlank @RequestParam String fieldName,
+                                          @NotBlank @RequestParam String fieldValue) throws AuthenticateException,
+            AuctionException {
+        log.info(AUCTION_CONTROLLER + GET_AUCTIONS_BY_FIELD + "ready get the auctions by " + fieldName);
+        List<Auction> auctions = services.getAuctionsByField(fieldName, fieldValue);
+        log.info(AUCTION_CONTROLLER + GET_AUCTIONS_BY_FIELD + "auctions returned Successfully");
+        return new AuctionsListResponse(SUCCESS, "Auction returned Successfully", auctions);
+    }
+
+
 
 
     /**
@@ -145,4 +163,5 @@ public class AuctionController {
         log.info(AUCTION_CONTROLLER + DELETE_AUCTION_BY_ID + "auctions deleted Successfully");
         return new Response(SUCCESS, "Auction deleted Successfully");
     }
+
 }

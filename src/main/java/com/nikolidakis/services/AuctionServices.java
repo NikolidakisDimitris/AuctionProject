@@ -2,6 +2,7 @@ package com.nikolidakis.services;
 
 import com.nikolidakis.exceptions.AuctionException;
 import com.nikolidakis.exceptions.AuthenticateException;
+import com.nikolidakis.exceptions.ItemCategoryException;
 import com.nikolidakis.models.Auction;
 import com.nikolidakis.requests.GetAuctionsByFieldRequest;
 import com.nikolidakis.requests.NewAuctionRequest;
@@ -18,11 +19,15 @@ public interface AuctionServices {
     List<Auction> getClosedAuctions() throws AuctionException;
 
 
-    void newAuction(NewAuctionRequest request) throws AuctionException, AuthenticateException;
+    void newAuction(NewAuctionRequest request) throws AuctionException, AuthenticateException, ItemCategoryException;
 
     Auction getAuctionById(Long auctionId) throws AuctionException;
 
     List<Auction> getAuctionsByField(GetAuctionsByFieldRequest request) throws AuthenticateException, AuctionException;
+
+    List<Auction> getAuctionsByField(String fieldName, String fieldValue) throws AuthenticateException,
+            AuctionException;
+
 
     void newBid(NewBidRequest request) throws AuthenticateException, AuctionException;
 

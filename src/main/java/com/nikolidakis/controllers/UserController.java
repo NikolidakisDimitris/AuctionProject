@@ -8,6 +8,7 @@ import com.nikolidakis.requests.RateUserRequest;
 import com.nikolidakis.requests.RegisterNewUserRequest;
 import com.nikolidakis.responses.AllUsersResponse;
 import com.nikolidakis.responses.AuthenticationResponse;
+import com.nikolidakis.responses.RegisterNewUserResponse;
 import com.nikolidakis.responses.Response;
 import com.nikolidakis.services.UserServices;
 import lombok.Data;
@@ -46,11 +47,12 @@ public class UserController {
     @PostMapping(value = "/registernewuser",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Response registerNewUser(@Valid @RequestBody RegisterNewUserRequest request) throws UserException {
+    public Response registerNewUser(@Valid @RequestBody RegisterNewUserRequest request) throws UserException, AuthenticateException {
         log.info(USER_CONTROLER + "Method registerNewUser");
-        services.registerNewUser(request);
+        User user = services.registerNewUser(request);
+        String token = services.getToken(user.getUsername(), user.getPassword());
         log.info(USER_CONTROLER + "Successful registration of user ");
-        return new Response(SUCCESS, "User Registered successfully");
+        return new RegisterNewUserResponse(SUCCESS, "User Registered successfully", token);
     }
 
     @PostMapping(value = "/authenticateuser",
@@ -58,7 +60,7 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Response authenticateUser(@Valid @RequestBody AuthenticateUserRequest request) throws AuthenticateException {
         log.info(USER_CONTROLER + "Method getToken");
-        String token = services.getToken(request);
+        String token = services.getToken(request.getUsername(), request.getPassword());
         log.info(USER_CONTROLER + "Authentication was successful");
         return new AuthenticationResponse(SUCCESS, "Authenticated User OK", token);
     }

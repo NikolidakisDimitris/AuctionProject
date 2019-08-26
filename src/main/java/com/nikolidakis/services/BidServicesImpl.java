@@ -65,6 +65,13 @@ public class BidServicesImpl implements BidServices {
                 }
             }
         }
+        // Or if it's higher than the initial Price
+        else {
+            if (request.getBidderValue() < auction.getInitialPrice()) {
+                throw new BidException("The bid is not valid. It should be higher than the initial price");
+            }
+        }
+
 
         Bid bid = new Bid(null, bidder, now.toString(), request.getBidderValue(), auction);
 

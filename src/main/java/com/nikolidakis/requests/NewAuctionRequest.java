@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -39,12 +40,7 @@ public class NewAuctionRequest {
     @Size(max = 50)
     private String itemDescription;
 
-    @NotNull
-    @Size(max = 30)
-    private String itemLocation;
-
-    @NotNull
-    @Size(max = 30)
-    private String itemCountry;
+    @Min(0)
+    private double initialPrice;
 
 }

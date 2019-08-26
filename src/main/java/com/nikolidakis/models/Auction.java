@@ -1,7 +1,7 @@
 package com.nikolidakis.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -63,13 +63,38 @@ public class Auction {
     @Size(max = 30)
     String itemCountry;
 
-    @ManyToMany(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
+    @Column(name = "initial_price")
+    double initialPrice;
+
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "auction")
+    @JsonManagedReference
+    Set<Bid> bids;
+
+
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "auctions_categories",
             joinColumns = {@JoinColumn(name = "auction_id")},
             inverseJoinColumns = {@JoinColumn(name = "category_id")})
-    @JsonIgnore
     Set<ItemCategory> categories = new HashSet<>();
+
+    public Auction(Long id, @NotBlank @Size(max = 30) String nameOfItem, User seller,
+                   @NotBlank String startedTime, @NotBlank String endingTime,
+                   @NotBlank @Size(max = 50) String itemDescription, @NotBlank @Size(max = 30) String itemLocation,
+                   @NotBlank @Size(max = 30) String itemCountry,
+                   double initialPrice, Set<ItemCategory> categories) {
+        this.id = id;
+        this.nameOfItem = nameOfItem;
+        this.seller = seller;
+        this.startedTime = startedTime;
+        this.endingTime = endingTime;
+        this.itemDescription = itemDescription;
+        this.itemLocation = itemLocation;
+        this.itemCountry = itemCountry;
+        this.initialPrice = initialPrice;
+        this.categories = categories;
+    }
 
     @Override
     public int hashCode() {
