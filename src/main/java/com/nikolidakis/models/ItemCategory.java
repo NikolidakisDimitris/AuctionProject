@@ -13,7 +13,7 @@ import java.util.Set;
 
 
 @Entity
-@Table(name = "Categories", uniqueConstraints = {@UniqueConstraint(columnNames = {"categoryName"})})
+@Table(name = "Categories", uniqueConstraints = {@UniqueConstraint(columnNames = {"category_id"})})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,13 +24,22 @@ public class ItemCategory {
     @Column(name = "category_id")
     private Long categoryId;
 
-    @Column(name = "categoryName")
+    @Column(name = "category_name")
     @NotBlank
     private String categoryName;
 
     @ManyToMany(mappedBy = "categories", cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Auction> auctions = new HashSet<>();
+
+    @Column(name = "image_path")
+    private String imagePath;
+
+    public ItemCategory(Long categoryId, @NotBlank String categoryName, String imagePath) {
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
+        this.imagePath = imagePath;
+    }
 
     public ItemCategory(Long categoryId, @NotBlank String categoryName) {
         this.categoryId = categoryId;

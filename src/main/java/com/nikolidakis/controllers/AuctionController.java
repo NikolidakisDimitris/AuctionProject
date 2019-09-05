@@ -7,6 +7,7 @@ import com.nikolidakis.models.Auction;
 import com.nikolidakis.requests.DeleteAuctioById;
 import com.nikolidakis.requests.GetAuctionsByFieldRequest;
 import com.nikolidakis.requests.NewAuctionRequest;
+import com.nikolidakis.responses.AuctionResponse;
 import com.nikolidakis.responses.AuctionsListResponse;
 import com.nikolidakis.responses.Response;
 import com.nikolidakis.services.AuctionServices;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.nikolidakis.models.constants.LogConstants.*;
@@ -101,15 +101,11 @@ public class AuctionController {
      * @throws AuctionException
      */
     @GetMapping(value = "/getauctionbyid")
-    public Response getAuctionById(@NotBlank @RequestParam long auctionId) throws AuctionException {
+    public Response getAuctionById(@NotBlank @RequestParam Long auctionId) throws AuctionException {
         log.info(AUCTION_CONTROLLER + GET_AUCTION_BY_ID + "ready to create a new auction");
         Auction auction = services.getAuctionById(auctionId);
-
-        List<Auction> auctions = new ArrayList<>();
-        auctions.add(auction);
-
         log.info(AUCTION_CONTROLLER + GET_AUCTION_BY_ID + "Auction returned Successfully");
-        return new AuctionsListResponse(SUCCESS, "Auction returned Successfully", auctions);
+        return new AuctionResponse(SUCCESS, "Auction returned Successfully", auction);
     }
 
 

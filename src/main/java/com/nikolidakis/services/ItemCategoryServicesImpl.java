@@ -17,6 +17,9 @@ import static java.util.Objects.isNull;
 @Slf4j
 public class ItemCategoryServicesImpl implements ItemCategoryServices {
 
+    private String SERVER_IP_TO_GET_IMAGE = "http://83.212.109.213:8081/categories_photos";
+
+
     @Autowired
     private ItemCategoryRepository repository;
 
@@ -36,7 +39,9 @@ public class ItemCategoryServicesImpl implements ItemCategoryServices {
             throw new ItemCategoryException("This category already exists ");
         }
 
-        ItemCategory category = repository.save(new ItemCategory(null, categoryName.toLowerCase()));
+        String imagePath = SERVER_IP_TO_GET_IMAGE + "/" + categoryName.toLowerCase() + ".jpg";
+
+        ItemCategory category = repository.save(new ItemCategory(null, categoryName.toLowerCase(), imagePath));
     }
 
     public List<ItemCategory> findAllCategories() {

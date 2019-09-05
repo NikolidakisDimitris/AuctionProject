@@ -61,8 +61,9 @@ public class UserController {
     public Response authenticateUser(@Valid @RequestBody AuthenticateUserRequest request) throws AuthenticateException {
         log.info(USER_CONTROLER + "Method getToken");
         String token = services.getToken(request.getUsername(), request.getPassword());
+        User user = services.findUserByToken(token);
         log.info(USER_CONTROLER + "Authentication was successful");
-        return new AuthenticationResponse(SUCCESS, "Authenticated User OK", token);
+        return new AuthenticationResponse(SUCCESS, "Authenticated User OK", token, user);
     }
 
     @PostMapping(value = "/finduserbyid",

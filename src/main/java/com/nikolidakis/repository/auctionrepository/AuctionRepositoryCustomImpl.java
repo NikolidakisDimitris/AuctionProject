@@ -35,7 +35,8 @@ public class AuctionRepositoryCustomImpl implements AuctionRepositoryCustom {
         log.info(AUCTION_REPOSITORY_CUSTOM_IMPL + GET_OPEN_AUCTIONS + "prepared to call the Database ");
         try {
             TypedQuery<Auction> query =
-                    (TypedQuery<Auction>) entityManager.createNativeQuery("SELECT * FROM " + DATABASE + ".Auctions where ending_time >= curdate();", Auction.class);
+                    (TypedQuery<Auction>) entityManager.createNativeQuery("SELECT * FROM " + DATABASE + ".auctions " +
+                            "where ending_time >= curdate();", Auction.class);
             openAuctions = query.getResultList();
             log.info(AUCTION_REPOSITORY_CUSTOM_IMPL + GET_OPEN_AUCTIONS + " Database call and cast of objects to type Auction was successful ");
         } catch (Exception e) {
@@ -52,7 +53,7 @@ public class AuctionRepositoryCustomImpl implements AuctionRepositoryCustom {
         log.info(AUCTION_REPOSITORY_CUSTOM_IMPL + GET_CLOSED_AUCTIONS + "prepared to call the Database ");
         try {
             TypedQuery<Auction> query =
-                    (TypedQuery<Auction>) entityManager.createNativeQuery("SELECT * FROM " + DATABASE + ".Auctions " +
+                    (TypedQuery<Auction>) entityManager.createNativeQuery("SELECT * FROM " + DATABASE + ".auctions " +
                             "where ending_time <= curdate();", Auction.class);
             closedAuctions = query.getResultList();
             log.info(AUCTION_REPOSITORY_CUSTOM_IMPL + GET_CLOSED_AUCTIONS + " Database call and cast of objects to " +

@@ -95,7 +95,7 @@ public class BidServicesImpl implements BidServices {
     }
 
     @Override
-    public Bid getHighestBid(long auctionId) throws BidException, AuctionException {
+    public Bid getHighestBid(Long auctionId) throws BidException, AuctionException {
         log.info(BID_SERVICES + GET_HIGHEST_BID_BY_AUCTION + " Ready to fing the highest Bid . ");
         List<Bid> auctions = getBidsByAuction(auctionId);
         Bid highestBid = null;

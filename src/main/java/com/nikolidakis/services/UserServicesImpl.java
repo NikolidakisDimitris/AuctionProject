@@ -162,7 +162,7 @@ public class UserServicesImpl implements UserServices {
             //The one who is going to rate (the current user) has to be the winner of the auction
             if (auctionWinner.getId().equals(currentUser.getId())) {
                 userToUpdate.setSellerRating(rate);
-                long votes = userToUpdate.getSellerRatingVotes() + 1;
+                Long votes = userToUpdate.getSellerRatingVotes() + 1;
                 userToUpdate.setSellerRatingVotes(votes);
                 userRepository.save(userToUpdate);
                 sellerOrBidderRated = "seller";
@@ -177,7 +177,7 @@ public class UserServicesImpl implements UserServices {
             // can not be rated
             if (auctionWinner.getId().equals(userToUpdate.getId())) {
                 userToUpdate.setBidderRating(rate);
-                long votes = userToUpdate.getBidderRatingVotes();
+                Long votes = userToUpdate.getBidderRatingVotes();
                 userToUpdate.setBidderRatingVotes(votes);
                 userRepository.save(userToUpdate);
                 sellerOrBidderRated = "bidder";

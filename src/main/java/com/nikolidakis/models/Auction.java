@@ -27,49 +27,49 @@ public class Auction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "auction_id")
-    Long id;
+    private Long id;
 
     @Column(name = "name_of_item")
     @NotBlank
     @Size(max = 30)
-    String nameOfItem;
+    private String nameOfItem;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "seller_id", referencedColumnName = "user_id")
-    User seller; //matchItById Get token, find user, get Id
+    private User seller; //matchItById Get token, find user, get Id
 
     @Column(name = "started_time")
     @NotBlank
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm")
-    String startedTime;
+    private String startedTime;
 
     @Column(name = "ending_time")
     @NotBlank
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm")
-    String endingTime;
+    private String endingTime;
 
     @Column(name = "item_description")
     @NotBlank
     @Size(max = 50)
-    String itemDescription;
+    private String itemDescription;
 
     @Column(name = "item_location")
     @NotBlank
     @Size(max = 30)
-    String itemLocation;
+    private String itemLocation;
 
     @Column(name = "item_country")
     @NotBlank
     @Size(max = 30)
-    String itemCountry;
+    private String itemCountry;
 
     @Column(name = "initial_price")
-    double initialPrice;
+    private double initialPrice;
 
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "auction")
     @JsonManagedReference
-    Set<Bid> bids;
+    private Set<Bid> bids;
 
 
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
@@ -77,7 +77,11 @@ public class Auction {
             name = "auctions_categories",
             joinColumns = {@JoinColumn(name = "auction_id")},
             inverseJoinColumns = {@JoinColumn(name = "category_id")})
-    Set<ItemCategory> categories = new HashSet<>();
+    private Set<ItemCategory> categories = new HashSet<>();
+
+    @Column(name = "image_path")
+    private String imagePath;
+
 
     public Auction(Long id, @NotBlank @Size(max = 30) String nameOfItem, User seller,
                    @NotBlank String startedTime, @NotBlank String endingTime,

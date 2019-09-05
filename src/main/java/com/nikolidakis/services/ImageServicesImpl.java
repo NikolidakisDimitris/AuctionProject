@@ -4,30 +4,25 @@ import com.nikolidakis.exceptions.AuctionException;
 import com.nikolidakis.exceptions.AuthenticateException;
 import com.nikolidakis.exceptions.ImageException;
 import com.nikolidakis.models.Auction;
-import com.nikolidakis.models.AuctionImage;
 import com.nikolidakis.models.User;
-import com.nikolidakis.repository.auctionimagerepository.AuctionImageRepository;
+import com.nikolidakis.repository.auctionrepository.AuctionRepository;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
-import static com.nikolidakis.models.constants.LogConstants.*;
-import static org.springframework.util.ObjectUtils.isEmpty;
+import static com.nikolidakis.models.constants.LogConstants.IMAGE_SERVICES;
+import static com.nikolidakis.models.constants.LogConstants.UPLOAD_IMAGE;
 
 @Service
 @Data
@@ -36,15 +31,21 @@ public class ImageServicesImpl implements ImageServices {
 
     private static final String FOLDER = "images/";
 
-    @Autowired
-    private AuctionImageRepository imageRepository;
+    private String SERVER_IP_TO_UPLOAD = "https://83.212.109.213:8080/";
+    private String SERVER_IP_TO_GET = "http://83.212.109.213:8081/";
+
+
     @Autowired
     private UserServices userServices;
     @Autowired
+    @Lazy
     private AuctionServices auctionServices;
+    @Autowired
+    private AuctionRepository auctionRepository;
 
     @Override
-    public void save(MultipartFile imageFile, String token, long auctionId) throws ImageException, AuthenticateException,
+    public void save(MultipartFile imageFile, String token, Long auctionId) throws ImageException,
+            AuthenticateException,
             AuctionException {
         log.info(IMAGE_SERVICES + UPLOAD_IMAGE + "Ready to save the image ");
 
@@ -69,47 +70,21 @@ public class ImageServicesImpl implements ImageServices {
 
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss SSS");
-            String nowFormated = now.format(formatter);
+            String nowFormated = now.format(formatter).replace(" ", "_");
+
 
             String imageName = "auction_" + auctionId + "_" + nowFormated + ".jpg";
             Path path = Paths.get(FOLDER + imageName);
             Files.write(path, bytes);
             log.info(IMAGE_SERVICES + UPLOAD_IMAGE + "The photo has been saved successfully");
-            AuctionImage image = imageRepository.save(new AuctionImage(null, imageName, path.toString()));
+
+            auction.setImagePath(SERVER_IP_TO_GET + imageName);
+            auctionRepository.save(auction);
+
         } catch (IOException e) {
-            log.info(IMAGE_SERVICES + UPLOAD_IMAGE + "Exception occured \n " + ExceptionUtils.getStackTrace(e));
+            log.info(IMAGE_SERVICES + UPLOAD_IMAGE + "Exception occurred \n " + ExceptionUtils.getStackTrace(e));
             throw new ImageException("The image could not be parsed or saved");
         }
     }
-
-    @Override
-    public List<byte[]> getImages(long auctionId) throws IOException, ImageException {
-        log.info(IMAGE_SERVICES + GET_IMAGES + "ready to get the images");
-
-        List<AuctionImage> paths = imageRepository.findAllImagePathsForAuctionId(auctionId);
-
-        if (isEmpty(paths)) {
-            throw new ImageException("This auction has no images");
-        }
-
-        List<byte[]> images = new ArrayList<>();
-        for (AuctionImage current : paths) {
-
-            byte[] bytes = getImageFromPath(current.getImagePath());
-            images.add(getImageFromPath(current.getImagePath()));
-        }
-        return images;
-    }
-
-    //Gets the path and returns an array of bytes
-    private byte[] getImageFromPath(String path) throws IOException, ImageException {
-        InputStream in = new FileInputStream(path);
-        System.out.println("Get Images From path" + in);
-        if (isEmpty(in)) {
-            throw new ImageException("The path is null");
-        }
-        return IOUtils.toByteArray(in);
-    }
-
 }
 

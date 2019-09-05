@@ -23,8 +23,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-//    @JsonIgnore(value = true)
-    Long id; // primary key
+    private Long id; // primary key
 
     @Column(name = "username")
     @NotBlank
@@ -86,7 +85,7 @@ public class User {
     private int bidderRating;
 
     @Column(name = "bidder_rating_votes")
-    private long bidderRatingVotes;
+    private Long bidderRatingVotes;
 
     @Column(name = "sellerRating")
     @Min(0)
@@ -94,7 +93,7 @@ public class User {
     private int sellerRating;
 
     @Column(name = "seller_rating_votes")
-    private long sellerRatingVotes;
+    private Long sellerRatingVotes;
 
     public User(Long id, @NotBlank @Size(max = 30) String username, @NotBlank @Size(max = 512) String password,
                 @NotBlank @Size(max = 30) String firstName, @NotBlank @Size(max = 30) String lastName,

@@ -15,5 +15,5 @@ public interface BidServices {
 
     List<Bid> getBidsByAuction(Long auctionId) throws AuctionException, BidException;
 
-    Bid getHighestBid(long auctionId) throws BidException, AuctionException;
+    Bid getHighestBid(Long auctionId) throws BidException, AuctionException;
 }

@@ -40,16 +40,18 @@ public class AuctionServicesImpl implements AuctionServices {
     private UserServices userServices;
     private ItemCategoryRepository itemCategoryRepository;
     private BidRepository bidRepository;
+    private ImageServices imageServices;
 
     @Autowired
     private AuctionServicesImpl(AuctionRepository auctionRepository, UserRepository userRepository,
                                 UserServices userServices, ItemCategoryRepository itemCategoryRepository,
-                                BidRepository bidRepository) {
+                                BidRepository bidRepository, ImageServices imageServices) {
         this.auctionRepository = auctionRepository;
         this.userRepository = userRepository;
         this.userServices = userServices;
         this.itemCategoryRepository = itemCategoryRepository;
         this.bidRepository = bidRepository;
+        this.imageServices = imageServices;
 
     }
 
@@ -59,6 +61,7 @@ public class AuctionServicesImpl implements AuctionServices {
     public List<Auction> getAllAuctions() throws AuctionException {
         log.info(AUCTION_SERVICES + GET_ALL_AUCTIONS + "find all auctions");
         List<Auction> auctions = (List<Auction>) auctionRepository.findAll();
+
         for (Auction element : auctions) {
 
             System.out.println(element);
@@ -143,18 +146,20 @@ public class AuctionServicesImpl implements AuctionServices {
     public List<Auction> getAuctionsByField(GetAuctionsByFieldRequest request) throws AuthenticateException, AuctionException {
         log.info(AUCTION_SERVICES + GET_AUCTIONS_BY_FIELD + "find auctions by " + request.getFieldName());
         List<Auction> auctions = new ArrayList<>();
-        System.out.println(request.getFieldName());
-        System.out.println(request.getFieldValue());
-        switch (request.getFieldName()) {
-            case "categoryId":
+        switch (request.getFieldName().toLowerCase()) {
+            case "categoryid":
                 ItemCategory category = itemCategoryRepository.findById(Long.parseLong(request.getFieldValue())).orElse(null);
                 auctions = auctionRepository.findByCategories(category);
                 break;
-            case "sellerId":
+            case "sellerid":
                 User user = userRepository.findById(Long.parseLong(request.getFieldValue())).orElse(null);
                 auctions = auctionRepository.findBySeller(user);
                 break;
-            case "bidderToken":
+            case "sellertoken":
+                User user2 = userServices.findUserByToken(request.getFieldValue());
+                auctions = auctionRepository.findBySeller(user2);
+                break;
+            case "biddertoken":
                 //find user by the provided token
                 User user1 = userServices.findUserByToken(request.getFieldValue());
 
@@ -180,8 +185,7 @@ public class AuctionServicesImpl implements AuctionServices {
     public List<Auction> getAuctionsByField(String fieldName, String fieldValue) throws AuthenticateException, AuctionException {
         log.info(AUCTION_SERVICES + GET_AUCTIONS_BY_FIELD + "find auctions by " + fieldName);
         List<Auction> auctions = new ArrayList<>();
-        System.out.println(fieldName);
-        System.out.println(fieldValue);
+
         switch (fieldName) {
             case "categoryId":
                 ItemCategory category = itemCategoryRepository.findById(Long.parseLong(fieldValue)).orElse(null);
