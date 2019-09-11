@@ -28,10 +28,6 @@ import static com.nikolidakis.models.constants.LogConstants.*;
 import static com.nikolidakis.models.constants.StatusCodes.SUCCESS;
 
 
-//TODO: Needs to implement logic when a message is read or not. When the sent are fetched , then do i have to set the
-// isRead to true ???
-
-
 @RestController
 @RequestMapping("/message")
 @Data

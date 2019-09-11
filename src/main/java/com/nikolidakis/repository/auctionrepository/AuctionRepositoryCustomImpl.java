@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -66,28 +65,6 @@ public class AuctionRepositoryCustomImpl implements AuctionRepositoryCustom {
         return closedAuctions;
 
 
-    }
-
-    @Override
-    public Auction findAuctionById(Long id) {
-//        Auction auction = null;
-        log.info(AUCTION_REPOSITORY_CUSTOM_IMPL + FIND_AUCTION_BY_ID + "prepared to call the Database ");
-        Query query = entityManager.createNativeQuery("SELECT auctions.*,\n" +
-                "bids.*\n" +
-                "FROM auctions\n" +
-                "left join bids \n" +
-                "on auctions.auction_id = bids.auction_item_id\n" +
-                "where auctions.auction_id = ? ;");
-        query.setParameter(1, id);
-        Object[] auction = (Object[]) query.getSingleResult();
-
-
-        System.out.println("Repository Custom Implementation . the auction is");
-        for (Object element : auction) {
-            System.out.println(element);
-        }
-
-        return null;
     }
 
     @Override

@@ -73,11 +73,9 @@ public class UserServicesImpl implements UserServices {
     //Find all the users
     @Override
     public String getToken(String username, String password) throws AuthenticateException {
-        System.out.println(md5(password));
 
         log.info(USER_SERVICE + AUTHENTICATE_USER + "Ready to call the DB to authenticate the user");
         User user = userRepository.findByUsernameAndPassword(username, password);
-        System.out.println(user);
         if (isNull(user)) {
             log.error(USER_SERVICE + AUTHENTICATE_USER + "There is no such user");
             throw new AuthenticateException("Not Authenticated User");
@@ -93,7 +91,6 @@ public class UserServicesImpl implements UserServices {
     @Override
     public User findUserByToken(String token) throws AuthenticateException {
         List<User> users = (List<User>) userRepository.findAll();
-        System.out.println(token);
 
         if (isNull(token)) {
             log.error(USER_SERVICE + FIND_USER_BY_TOKEN + "null token");
@@ -132,7 +129,6 @@ public class UserServicesImpl implements UserServices {
         }
 
         //fetch the user from the database in order to be updatable
-        System.out.println(userToBeRated.getId());
         User userToUpdate = userRepository.findById(userToBeRated.getId()).orElse(null);
         if (isEmpty(userToUpdate)) {
             throw new UserException("Empty user. The user to be rated is not correct. ");

@@ -76,8 +76,6 @@ public class MessageServicesImpl implements MessageServices {
         //find the winner of the auction
         User winner = auctionServices.getHighestBid(auction).getBidder();
 
-//        User winner = bidServices.getHighestBid(auction.getId()).getBidder();
-
         //1. check if the user who is going to sent the msg is the winner, and the receiver is the seller
         //The winner want to sent to the seller
         if (currentUser.getId().equals(winner.getId())) {

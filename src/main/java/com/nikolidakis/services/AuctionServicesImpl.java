@@ -59,11 +59,6 @@ public class AuctionServicesImpl implements AuctionServices {
     public List<Auction> getAllAuctions() throws AuctionException {
         log.info(AUCTION_SERVICES + GET_ALL_AUCTIONS + "find all auctions");
         List<Auction> auctions = (List<Auction>) auctionRepository.findAll();
-
-        for (Auction element : auctions) {
-
-            System.out.println(element);
-        }
         log.info(AUCTION_SERVICES + GET_ALL_AUCTIONS + "auctions found successfully ");
         return auctions;
 
@@ -171,7 +166,6 @@ public class AuctionServicesImpl implements AuctionServices {
                 Set<Auction> auctionSet = new HashSet<>();
                 for (Bid current : bids) {
                     auctionSet.add(current.getAuction());
-                    System.out.println("Auction is " + current);
                 }
                 auctions.addAll(auctionSet);
                 break;

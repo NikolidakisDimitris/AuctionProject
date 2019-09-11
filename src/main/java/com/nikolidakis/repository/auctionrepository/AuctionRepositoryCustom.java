@@ -10,7 +10,5 @@ public interface AuctionRepositoryCustom {
 
     public List<Auction> getClosedAuctions();
 
-    public Auction findAuctionById(Long id);
-
     public void deleteAuction(Auction auction);
 }
