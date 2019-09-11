@@ -9,6 +9,7 @@ import com.nikolidakis.requests.GetAuctionsByFieldRequest;
 import com.nikolidakis.requests.NewAuctionRequest;
 import com.nikolidakis.responses.AuctionResponse;
 import com.nikolidakis.responses.AuctionsListResponse;
+import com.nikolidakis.responses.NewAuctionResponse;
 import com.nikolidakis.responses.Response;
 import com.nikolidakis.services.AuctionServices;
 import com.nikolidakis.services.BidServices;
@@ -86,9 +87,9 @@ public class AuctionController {
     public Response newAuction(@Valid @RequestBody NewAuctionRequest request) throws AuctionException, AuthenticateException, ItemCategoryException {
         log.info(AUCTION_CONTROLLER + NEW_AUCTION + "ready to create a new auction");
         log.info(request.toString());
-        services.newAuction(request);
+        Auction auction = services.newAuction(request);
         log.info(AUCTION_CONTROLLER + NEW_AUCTION + "Auction registered successfully");
-        return new Response(SUCCESS, "Auction Registered successfully");
+        return new NewAuctionResponse(SUCCESS, "Auction Registered successfully", auction.getId());
     }
 
 

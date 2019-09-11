@@ -2,6 +2,7 @@ package com.nikolidakis.services;
 
 import com.nikolidakis.exceptions.AuctionException;
 import com.nikolidakis.exceptions.AuthenticateException;
+import com.nikolidakis.exceptions.BidException;
 import com.nikolidakis.exceptions.ItemCategoryException;
 import com.nikolidakis.models.Auction;
 import com.nikolidakis.models.Bid;
@@ -20,10 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.nikolidakis.models.constants.LogConstants.*;
 import static java.util.Objects.isNull;
@@ -103,7 +101,8 @@ public class AuctionServicesImpl implements AuctionServices {
 
     //Method to create a new auction
     @Override
-    public void newAuction(NewAuctionRequest request) throws AuctionException, AuthenticateException, ItemCategoryException {
+    public Auction newAuction(NewAuctionRequest request) throws AuctionException, AuthenticateException,
+            ItemCategoryException {
         log.info(AUCTION_SERVICES + NEW_AUCTION + " ready to open a new auction");
 
         //find the user who wants to open a new auction
@@ -126,6 +125,7 @@ public class AuctionServicesImpl implements AuctionServices {
         log.info(auction.toString());
         Auction newAuction = auctionRepository.save(auction);
         log.info(AUCTION_SERVICES + NEW_AUCTION + " Auction registered successfully");
+        return newAuction;
     }
 
 
@@ -253,6 +253,21 @@ public class AuctionServicesImpl implements AuctionServices {
         auctionRepository.deleteAuction(auction);
         log.info(AUCTION_SERVICES + DELETE_AUCTION_BY_ID + " The auction has been deleted successfully ");
 
+    }
+
+    @Override
+    public Bid getHighestBid(Auction auction) throws BidException, AuctionException {
+        log.info(AUCTION_SERVICES + GET_HIGHEST_BID_BY_AUCTION + " Ready to find the highest Bid . ");
+        Set<Bid> bids = auction.getBids();
+        Bid highestBid = null;
+        if (isNull(bids)) {
+            log.info(AUCTION_SERVICES + GET_HIGHEST_BID_BY_AUCTION + "There are no bids for  auction with id : " + auction.getId());
+            throw new BidException("There is no bids for or  auction with id : " + auction.getId());
+        }
+        highestBid = bids.stream().max(Comparator.comparingDouble(Bid::getBidPrice)).get();
+
+        log.info(AUCTION_SERVICES + GET_HIGHEST_BID_BY_AUCTION + " Highest Bid found successfully. Returning the bid");
+        return highestBid;
     }
 
 

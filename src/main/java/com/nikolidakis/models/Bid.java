@@ -21,7 +21,7 @@ public class Bid {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bid_id")
-    private Long bid_id;
+    private Long bidId;
 
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -43,7 +43,7 @@ public class Bid {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(bid_id);
+        return Objects.hashCode(bidId);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class Bid {
         if (getClass() != obj.getClass())
             return false;
         Bid other = (Bid) obj;
-        return Objects.equals(bid_id, other.bid_id);
+        return Objects.equals(bidId, other.bidId);
     }
 
 }

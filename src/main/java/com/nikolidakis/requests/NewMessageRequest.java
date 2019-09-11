@@ -1,6 +1,5 @@
 package com.nikolidakis.requests;
 
-import com.nikolidakis.models.Auction;
 import com.nikolidakis.responses.Response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +14,7 @@ public class NewMessageRequest extends Response {
     @NotNull
     private String token;
     @NotNull
-    private Auction auction;
+    private Long auctionId;
     @NotNull
     private String subject;
     @NotNull

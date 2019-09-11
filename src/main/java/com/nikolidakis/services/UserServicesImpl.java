@@ -28,12 +28,14 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 public class UserServicesImpl implements UserServices {
 
     private final UserRepository userRepository;
-    private final BidServices bidServices;
+    //    private final BidServices bidServices;
+    private final AuctionServices auctionServices;
 
     @Autowired
-    public UserServicesImpl(UserRepository userRepository, @Lazy BidServices bidServices) {
+    public UserServicesImpl(UserRepository userRepository, @Lazy AuctionServices auctionServices) {
         this.userRepository = userRepository;
-        this.bidServices = bidServices;
+//        this.bidServices = bidServices;
+        this.auctionServices = auctionServices;
     }
 
     @Override
@@ -117,10 +119,17 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
-    public String rateUser(String userToken, User userToBeRated, Auction auction, int rate) throws AuthenticateException,
+    public String rateUser(String userToken, Long userToBeRatedId, Long auctionId, int rate) throws AuthenticateException,
             UserException, RateException, BidException, AuctionException {
         //find the user by the token
         User currentUser = findUserByToken(userToken);
+
+        //find the user who is going to be rated
+        User userToBeRated = findUserById(userToBeRatedId);
+        if (isNull(userToBeRated)) {
+            log.error(USER_SERVICE + RATE_USER + "The given id {} for the user to be rated is wrong ", userToBeRatedId);
+            throw new UserException("There is no user with id :" + userToBeRatedId);
+        }
 
         //fetch the user from the database in order to be updatable
         System.out.println(userToBeRated.getId());
@@ -129,7 +138,17 @@ public class UserServicesImpl implements UserServices {
             throw new UserException("Empty user. The user to be rated is not correct. ");
         }
 
+        //Get the auction that is referenced for the rating
+        Auction auction = auctionServices.getAuctionById(auctionId);
+        if (isNull(auction)) {
+            log.error(USER_SERVICE + RATE_USER + "The given id {} for the auction is wrong ",
+                    auctionId);
+            throw new AuctionException("There is no auction with id :" + auctionId);
+        }
+
         //check if the auction is still open -> Open auctions can not be rated
+        log.error(USER_SERVICE + RATE_USER + "Check if the auction is still open ");
+
         int year = Integer.parseInt(auction.getEndingTime().substring(0, 4));
         int month = Integer.parseInt(auction.getEndingTime().substring(5, 7));
         int day = Integer.parseInt(auction.getEndingTime().substring(8, 10));
@@ -144,16 +163,20 @@ public class UserServicesImpl implements UserServices {
         LocalDateTime now = LocalDateTime.now();
 
         if (endingTime.isAfter(now)) {
+            log.error(USER_SERVICE + RATE_USER + "The user can't be rated yet because the auction is still running");
             throw new RateException("The user can't be rated yet because the auction is still running");
         }
 
         //check if the userId is different from the auction seller -> If yes, then RateSeller ELSE RateBidder
+        log.error(USER_SERVICE + RATE_USER + "check if the userId to determine if it's seller or bidder rating ");
         boolean rateSeller = true;
         String sellerOrBidderRated = null;
         if (currentUser.getId().equals(userToBeRated.getId())) {
             rateSeller = false;
         }
-        Bid highestBid = bidServices.getHighestBid(auction.getId());
+
+        Bid highestBid = auctionServices.getHighestBid(auction);
+//        Bid highestBid = bidServices.getHighestBid(auction.getId());
         User auctionWinner = highestBid.getBidder();
 
         //--------- RateSeller : if bidder is not the winner then he can not rate --------------------
@@ -162,11 +185,16 @@ public class UserServicesImpl implements UserServices {
             //The one who is going to rate (the current user) has to be the winner of the auction
             if (auctionWinner.getId().equals(currentUser.getId())) {
                 userToUpdate.setSellerRating(rate);
+                if (isNull(userToUpdate.getSellerRatingVotes())) {
+                    userToUpdate.setSellerRatingVotes(0L);
+                }
                 Long votes = userToUpdate.getSellerRatingVotes() + 1;
                 userToUpdate.setSellerRatingVotes(votes);
                 userRepository.save(userToUpdate);
                 sellerOrBidderRated = "seller";
+                log.error(USER_SERVICE + RATE_USER + "The seller has been rated successfully");
             } else {
+                log.error(USER_SERVICE + RATE_USER + "This user is not the winner so he can not rate the seller");
                 throw new RateException("This user is not the winner so he can not rate the seller");
             }
         }
@@ -177,11 +205,16 @@ public class UserServicesImpl implements UserServices {
             // can not be rated
             if (auctionWinner.getId().equals(userToUpdate.getId())) {
                 userToUpdate.setBidderRating(rate);
-                Long votes = userToUpdate.getBidderRatingVotes();
+                if (isNull(userToUpdate.getBidderRatingVotes())) {
+                    userToUpdate.setBidderRatingVotes(0L);
+                }
+                Long votes = userToUpdate.getBidderRatingVotes() + 1;
                 userToUpdate.setBidderRatingVotes(votes);
                 userRepository.save(userToUpdate);
                 sellerOrBidderRated = "bidder";
+                log.error(USER_SERVICE + RATE_USER + "The bidder has been rated successfully");
             } else {
+                log.error(USER_SERVICE + RATE_USER + "The bidder can not be rated, because he is not the winner");
                 throw new RateException("The bidder can not be rated, because he is not the winner");
             }
         }

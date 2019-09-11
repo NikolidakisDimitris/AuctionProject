@@ -44,6 +44,5 @@ public class Message {
     @Column(name = "is_read")
     private boolean isRead;
 
-    //Maybe i can add a field to show if a message is read or not
 
 }

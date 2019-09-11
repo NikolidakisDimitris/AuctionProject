@@ -6,6 +6,7 @@ import com.nikolidakis.exceptions.BidException;
 import com.nikolidakis.exceptions.MessageException;
 import com.nikolidakis.models.Message;
 import com.nikolidakis.requests.GetUserMsgsRequest;
+import com.nikolidakis.requests.MarkMsgAsReadRequest;
 import com.nikolidakis.requests.NewMessageRequest;
 import com.nikolidakis.responses.AllMessageResponse;
 import com.nikolidakis.responses.MessagesResponse;
@@ -58,7 +59,7 @@ public class MessageController {
     public Response sendingNewMessage(@Valid @RequestBody NewMessageRequest request) throws AuctionException,
             AuthenticateException, MessageException, BidException {
         log.info(MESSAGE_CONTROLLER + SENDING_NEW_MESSAGE + "Ready to sent a new message");
-        messageServices.sendingNewMessage(request.getToken(), request.getAuction(), request.getSubject(), request.getMessage());
+        messageServices.sendingNewMessage(request.getToken(), request.getAuctionId(), request.getSubject(), request.getMessage());
         log.info(MESSAGE_CONTROLLER + SENDING_NEW_MESSAGE + "new message sent successfully");
         return new Response(SUCCESS, "The message sent successfully");
     }
@@ -73,6 +74,7 @@ public class MessageController {
         log.info(MESSAGE_CONTROLLER + GET_USER_INBOX + "user inbox fetched successfully");
         return new MessagesResponse(SUCCESS, "The inbox retrieved successfully", messages);
     }
+
     //Method to get the sent messages
     @PostMapping(value = "/getsent",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -95,4 +97,14 @@ public class MessageController {
         return new MessagesResponse(SUCCESS, "Unread messages retrieved successfully", messages);
     }
 
+
+    @PostMapping(value = "/markmessageasread",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response markMsgAsRead(@Valid @RequestBody MarkMsgAsReadRequest request) throws MessageException, AuthenticateException {
+        log.info(MESSAGE_CONTROLLER + MARK_MSG_AS_READ + "Ready to mark a message as read");
+        messageServices.markMsgAsRead(request.getToken(), request.getMsgId());
+        log.info(MESSAGE_CONTROLLER + MARK_MSG_AS_READ + "unread messages fetched successfully");
+        return new Response(SUCCESS, "Message Marked As Read");
+    }
 }

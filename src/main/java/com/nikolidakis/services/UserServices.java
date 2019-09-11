@@ -1,7 +1,6 @@
 package com.nikolidakis.services;
 
 import com.nikolidakis.exceptions.*;
-import com.nikolidakis.models.Auction;
 import com.nikolidakis.models.User;
 import com.nikolidakis.requests.RegisterNewUserRequest;
 
@@ -19,7 +18,7 @@ public interface UserServices {
 
     User findUserByToken(String token) throws AuthenticateException;
 
-    String rateUser(String userToken, User userToBeRated, Auction auction, int rate) throws AuthenticateException,
+    String rateUser(String userToken, Long userToBeRatedId, Long auctionId, int rate) throws AuthenticateException,
             AuctionException, BidException, UserException, RateException;
 
 }

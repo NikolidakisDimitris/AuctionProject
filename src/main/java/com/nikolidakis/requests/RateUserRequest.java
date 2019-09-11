@@ -1,7 +1,5 @@
 package com.nikolidakis.requests;
 
-import com.nikolidakis.models.Auction;
-import com.nikolidakis.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,9 +16,9 @@ public class RateUserRequest extends Request {
     @NotNull
     private String userToken;
     @NotNull
-    private User userToBeRated;
+    private Long userToBeRatedId;
     @NotNull
-    private Auction auction;
+    private Long auctionId;
     @NotNull
     @Min(0)
     @Max(5)

@@ -82,8 +82,8 @@ public class UserController {
     public Response rateUserAsSeller(@Valid @RequestBody RateUserRequest request) throws AuthenticateException,
             AuctionException, BidException, RateException, UserException {
         log.info(USER_CONTROLER + RATE_USER_AS_SELLER + "Ready to rate the seller of the auction");
-        String userOrSeller = services.rateUser(request.getUserToken(), request.getUserToBeRated(),
-                request.getAuction(), request.getRate());
+        String userOrSeller = services.rateUser(request.getUserToken(), request.getUserToBeRatedId(),
+                request.getAuctionId(), request.getRate());
         log.info(USER_CONTROLER + RATE_USER_AS_SELLER + "Rating of {} completed successfully", userOrSeller);
         return new Response(SUCCESS, userOrSeller + " rated successfully");
     }

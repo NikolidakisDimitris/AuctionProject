@@ -12,6 +12,7 @@ import com.nikolidakis.utils.Utils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.nikolidakis.models.constants.LogConstants.*;
+import static java.util.Objects.isNull;
 
 @Service
 @Data
@@ -27,14 +29,15 @@ public class MessageServicesImpl implements MessageServices {
 
     private MessageRepository messageRepository;
     private UserServices userServices;
-    //    private AuctionServices auctionServices;
+    private AuctionServices auctionServices;
     private BidServices bidServices;
 
     @Autowired
-    public MessageServicesImpl(MessageRepository messageRepository, UserServices userServices, BidServices bidServices) {
+    public MessageServicesImpl(MessageRepository messageRepository, UserServices userServices,
+                               @Lazy AuctionServices auctionServices, BidServices bidServices) {
         this.messageRepository = messageRepository;
         this.userServices = userServices;
-//        this.auctionServices = auctionServices;
+        this.auctionServices = auctionServices;
         this.bidServices = bidServices;
     }
 
@@ -48,12 +51,17 @@ public class MessageServicesImpl implements MessageServices {
     }
 
     @Override
-    public void sendingNewMessage(String token, Auction auction, String subject, String message) throws AuthenticateException,
+    public void sendingNewMessage(String token, Long auctionId, String subject, String message) throws AuthenticateException,
             MessageException, BidException, AuctionException {
 
         //find the user who want to sent a message
         User currentUser = userServices.findUserByToken(token);
         User receiver = null;
+        Auction auction = auctionServices.getAuctionById(auctionId);
+
+        if (isNull(auction)) {
+            throw new AuctionException("The auction with id : " + auctionId + "doesn't exist ");
+        }
 
         //check if the auction has ended
         LocalDateTime endingTime = Utils.stringDateToLocalDate(auction.getEndingTime());
@@ -66,7 +74,9 @@ public class MessageServicesImpl implements MessageServices {
         }
 
         //find the winner of the auction
-        User winner = bidServices.getHighestBid(auction.getId()).getBidder();
+        User winner = auctionServices.getHighestBid(auction).getBidder();
+
+//        User winner = bidServices.getHighestBid(auction.getId()).getBidder();
 
         //1. check if the user who is going to sent the msg is the winner, and the receiver is the seller
         //The winner want to sent to the seller
@@ -86,7 +96,8 @@ public class MessageServicesImpl implements MessageServices {
 
         } else {
             log.info(MESSAGE_SERVICES + SENDING_NEW_MESSAGE + "A general error occured  ");
-            throw new MessageException("You can not sent a message . Neither a seller, nor a winner of the auction");
+            throw new MessageException("You can not sent a message . You are neither the seller, nor the winner of " +
+                    "the auction");
         }
 
         //Sent the message
@@ -137,5 +148,25 @@ public class MessageServicesImpl implements MessageServices {
         }
 
         return unreadMsgs;
+    }
+
+    @Override
+    public void markMsgAsRead(String token, Long msgId) throws MessageException, AuthenticateException {
+        User currentUser = userServices.findUserByToken(token);
+        Message message = messageRepository.findById(msgId).orElse(null);
+
+        //check if the user and the message exists
+        if (isNull(currentUser) && (isNull(message))) {
+            throw new MessageException("User or message doesn't exist");
+        }
+
+        //check if the user to mark the msg as read is the receiver of the message
+        if (!currentUser.getUsername().equals(message.getReceiver().getUsername())) {
+            throw new MessageException("The message can be marked as read only by the receiver");
+        }
+
+        //Everything is ok, mark as read the msg
+        message.setRead(true);
+        messageRepository.save(message);
     }
 }

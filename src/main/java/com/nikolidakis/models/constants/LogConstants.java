@@ -14,6 +14,7 @@ public class LogConstants {
     public static final String FIND_USER_BY_TOKEN = "Method findUserByToken > ";
     public static final String RATE_USER_AS_SELLER = "Method rateUserAsSeller > ";
     public static final String RATE_USER_AS_BIDDER = "Method rateUserAsBidder > ";
+    public static final String RATE_USER = "Method rateUser > ";
 
 
     //Constants for the Auction
@@ -53,6 +54,7 @@ public class LogConstants {
     public static final String GET_USER_INBOX = "Method getUserInbox > ";
     public static final String GET_USER_SENT_MSG = "Method getUserMessages > ";
     public static final String SENDING_NEW_MESSAGE = "Method sendingNewMessage  > ";
+    public static final String MARK_MSG_AS_READ = "Method markMsgAsRead  > ";
 
     //Images System
     public static final String IMAGE_CONTROLLER = "Image Controller  > ";
