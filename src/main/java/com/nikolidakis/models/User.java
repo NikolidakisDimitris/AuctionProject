@@ -82,7 +82,7 @@ public class User {
     @Column(name = "bidder_rating")
     @Min(0)
     @Max(5)
-    private int bidderRating;
+    private double bidderRating;
 
     @Column(name = "bidder_rating_votes")
     private Long bidderRatingVotes;
@@ -90,7 +90,7 @@ public class User {
     @Column(name = "sellerRating")
     @Min(0)
     @Max(5)
-    private int sellerRating;
+    private double sellerRating;
 
     @Column(name = "seller_rating_votes")
     private Long sellerRatingVotes;

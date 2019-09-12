@@ -163,16 +163,15 @@ public class UserServicesImpl implements UserServices {
             throw new RateException("The user can't be rated yet because the auction is still running");
         }
 
-        //check if the userId is different from the auction seller -> If yes, then RateSeller ELSE RateBidder
+        //check if the current user is the auction seller -> If yes, then RateBidder ELSE RateSeller
         log.error(USER_SERVICE + RATE_USER + "check if the userId to determine if it's seller or bidder rating ");
         boolean rateSeller = true;
         String sellerOrBidderRated = null;
-        if (currentUser.getId().equals(userToBeRated.getId())) {
+        if (currentUser.getId().equals(auction.getSeller().getId())) {
             rateSeller = false;
         }
 
         Bid highestBid = auctionServices.getHighestBid(auction);
-//        Bid highestBid = bidServices.getHighestBid(auction.getId());
         User auctionWinner = highestBid.getBidder();
 
         //--------- RateSeller : if bidder is not the winner then he can not rate --------------------
@@ -180,12 +179,15 @@ public class UserServicesImpl implements UserServices {
             // The Bidder is going to rate the seller
             //The one who is going to rate (the current user) has to be the winner of the auction
             if (auctionWinner.getId().equals(currentUser.getId())) {
-                userToUpdate.setSellerRating(rate);
                 if (isNull(userToUpdate.getSellerRatingVotes())) {
                     userToUpdate.setSellerRatingVotes(0L);
                 }
                 Long votes = userToUpdate.getSellerRatingVotes() + 1;
                 userToUpdate.setSellerRatingVotes(votes);
+
+                double avg = (((userToUpdate.getSellerRatingVotes() - 1) * userToUpdate.getSellerRating()) + rate) / votes;
+                userToUpdate.setSellerRating(avg);
+
                 userRepository.save(userToUpdate);
                 sellerOrBidderRated = "seller";
                 log.error(USER_SERVICE + RATE_USER + "The seller has been rated successfully");
@@ -200,12 +202,15 @@ public class UserServicesImpl implements UserServices {
             //compare winner with the user to be rated. If they are NOT the same, then he is not the winner, so he
             // can not be rated
             if (auctionWinner.getId().equals(userToUpdate.getId())) {
-                userToUpdate.setBidderRating(rate);
                 if (isNull(userToUpdate.getBidderRatingVotes())) {
                     userToUpdate.setBidderRatingVotes(0L);
                 }
                 Long votes = userToUpdate.getBidderRatingVotes() + 1;
                 userToUpdate.setBidderRatingVotes(votes);
+
+                double avg = (((userToUpdate.getBidderRatingVotes() - 1) * userToUpdate.getBidderRating()) + rate) / votes;
+                userToUpdate.setBidderRating(avg);
+
                 userRepository.save(userToUpdate);
                 sellerOrBidderRated = "bidder";
                 log.error(USER_SERVICE + RATE_USER + "The bidder has been rated successfully");
