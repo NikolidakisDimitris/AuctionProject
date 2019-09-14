@@ -1,7 +1,6 @@
 package com.nikolidakis.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Objects;
 
+import static com.nikolidakis.utils.Utils.keepTwoDecimalDigits;
 import static com.nikolidakis.utils.Utils.md5;
 
 @Entity
@@ -17,7 +17,6 @@ import static com.nikolidakis.utils.Utils.md5;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class User {
 
     @Id
@@ -114,8 +113,47 @@ public class User {
         this.afm = afm;
     }
 
+    public User(Long id, @NotBlank @Size(max = 30) String username, @NotBlank @Size(max = 512) String password,
+                @NotBlank @Size(max = 30) String firstName, @NotBlank @Size(max = 30) String lastName,
+                @NotBlank @Email @Size(max = 30) String email, @NotBlank @Pattern(regexp = "^(0|[1-9][0-9]*)$")
+                @Size(max = 15) String phone, @NotBlank @Size(max = 30) String country, @NotBlank @Size(max = 30) String city,
+                @NotBlank @Size(max = 50) String address, @NotBlank @Size(max = 30) String afm, @Min(0) @Max(5)
+                        double bidderRating, Long bidderRatingVotes, @Min(0) @Max(5) double sellerRating, Long sellerRatingVotes) {
+        this.id = id;
+        this.username = username;
+        this.password = md5(password);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+        this.country = country;
+        this.city = city;
+        this.address = address;
+        this.afm = afm;
+        this.bidderRating = keepTwoDecimalDigits(bidderRating);
+        this.bidderRatingVotes = bidderRatingVotes;
+        this.sellerRating = keepTwoDecimalDigits(sellerRating);
+        this.sellerRatingVotes = sellerRatingVotes;
+    }
+
     public void setPassword(@NotBlank @Size(max = 512) String password) {
         this.password = md5(password);
+    }
+
+    public void setBidderRating(double bidderRating) {
+        this.bidderRating = keepTwoDecimalDigits(bidderRating);
+    }
+
+    public void setSellerRating(double sellerRating) {
+        this.sellerRating = keepTwoDecimalDigits(sellerRating);
+    }
+
+    public double getBidderRating() {
+        return keepTwoDecimalDigits(bidderRating);
+    }
+
+    public double getSellerRating() {
+        return keepTwoDecimalDigits(sellerRating);
     }
 
     @Override
@@ -134,5 +172,4 @@ public class User {
         User other = (User) obj;
         return Objects.equals(id, other.id);
     }
-
 }

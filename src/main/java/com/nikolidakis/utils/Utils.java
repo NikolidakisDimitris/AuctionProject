@@ -3,6 +3,7 @@ package com.nikolidakis.utils;
 import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -36,6 +37,11 @@ public class Utils {
         LocalTime time = LocalTime.of(hour, mins, 0, 0);
 
         return LocalDateTime.of(date, time);
+    }
+
+    public static double keepTwoDecimalDigits(double value) {
+        String twoDecimalNmb = new DecimalFormat("#.##").format(value);
+        return Double.parseDouble(twoDecimalNmb);
     }
 
 
