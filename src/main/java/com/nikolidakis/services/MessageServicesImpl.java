@@ -101,7 +101,7 @@ public class MessageServicesImpl implements MessageServices {
         //Sent the message
         String msgSubject = "Auction id " + auction.getId() + " : " + subject;
         Message messageObj = new Message(null, LocalDateTime.now().toString(), currentUser, receiver, msgSubject,
-                message, false);
+                message, false, auctionId);
         log.info(MESSAGE_SERVICES + SENDING_NEW_MESSAGE + "Ready to save the new message");
         Message savedMsg = messageRepository.save(messageObj);
         log.info(MESSAGE_SERVICES + SENDING_NEW_MESSAGE + "Message from {} to {} saved successfully",
@@ -166,5 +166,17 @@ public class MessageServicesImpl implements MessageServices {
         //Everything is ok, mark as read the msg
         message.setRead(true);
         messageRepository.save(message);
+    }
+
+    @Override
+    public List<Message> getMessageByAuctionId(String token, long auctionId) throws AuthenticateException, MessageException {
+        User currentUser = userServices.findUserByToken(token);
+        List<Message> messages = messageRepository.findByAuctionId(auctionId);
+
+        //check if the user and the message exists
+        if (isNull(currentUser) && (isNull(messages))) {
+            throw new MessageException("User or auction doesn't exist");
+        }
+        return messages;
     }
 }

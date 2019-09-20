@@ -72,6 +72,14 @@
             <version>3.5</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/net.imagej/ij -->
+        <dependency>
+            <groupId>net.imagej</groupId>
+            <artifactId>ij</artifactId>
+            <version>1.52q</version>
+        </dependency>
+
+
     </dependencies>
 
 

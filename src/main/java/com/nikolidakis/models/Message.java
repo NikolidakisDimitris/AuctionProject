@@ -44,5 +44,8 @@ public class Message {
     @Column(name = "is_read")
     private boolean isRead;
 
+    @Column(name = "auction_id")
+    private Long auctionId;
+
 
 }

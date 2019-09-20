@@ -55,6 +55,7 @@ public class LogConstants {
     public static final String GET_USER_SENT_MSG = "Method getUserMessages > ";
     public static final String SENDING_NEW_MESSAGE = "Method sendingNewMessage  > ";
     public static final String MARK_MSG_AS_READ = "Method markMsgAsRead  > ";
+    public static final String GET_MSG_BY_AUCTION_ID = "Method getMsgByAuctionId  > ";
 
     //Images System
     public static final String IMAGE_CONTROLLER = "Image Controller  > ";

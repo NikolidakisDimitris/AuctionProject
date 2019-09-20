@@ -24,6 +24,6 @@ public interface MessageServices {
 
     public void markMsgAsRead(String token, Long msgId) throws MessageException, AuthenticateException;
 
-
+    public List<Message> getMessageByAuctionId(String token, long auctionId) throws AuthenticateException, MessageException;
 
 }

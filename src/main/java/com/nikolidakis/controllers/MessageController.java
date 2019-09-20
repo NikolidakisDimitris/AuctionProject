@@ -5,6 +5,7 @@ import com.nikolidakis.exceptions.AuthenticateException;
 import com.nikolidakis.exceptions.BidException;
 import com.nikolidakis.exceptions.MessageException;
 import com.nikolidakis.models.Message;
+import com.nikolidakis.requests.GetMsgByAuctionIdRequest;
 import com.nikolidakis.requests.GetUserMsgsRequest;
 import com.nikolidakis.requests.MarkMsgAsReadRequest;
 import com.nikolidakis.requests.NewMessageRequest;
@@ -102,5 +103,13 @@ public class MessageController {
         messageServices.markMsgAsRead(request.getToken(), request.getMsgId());
         log.info(MESSAGE_CONTROLLER + MARK_MSG_AS_READ + "unread messages fetched successfully");
         return new Response(SUCCESS, "Message Marked As Read");
+    }
+
+    @PostMapping(value = "/getmsgbyauctionid")
+    public MessagesResponse getMsgByAuctionIdResponse(@Valid @RequestBody GetMsgByAuctionIdRequest request) throws AuthenticateException, MessageException {
+        log.info(MESSAGE_CONTROLLER + GET_MSG_BY_AUCTION_ID + "Ready to get all the message by auction id");
+        List<Message> messages = messageServices.getMessageByAuctionId(request.getToken(), request.getAuctionId());
+        log.info(MESSAGE_CONTROLLER + GET_MSG_BY_AUCTION_ID + "Messages returned successfully");
+        return new MessagesResponse(SUCCESS, "Message returned successfully", messages);
     }
 }

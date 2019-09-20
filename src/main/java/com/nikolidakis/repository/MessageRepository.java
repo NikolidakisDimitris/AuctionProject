@@ -12,4 +12,5 @@ public interface MessageRepository extends CrudRepository<Message, Long> {
 
     List<Message> findBySender(User sender);
 
+    List<Message> findByAuctionId(long auctionId);
 }
