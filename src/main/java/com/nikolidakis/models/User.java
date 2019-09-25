@@ -1,16 +1,25 @@
 package com.nikolidakis.models;
 
+import static com.nikolidakis.utils.Utils.keepOneDecimalDigits;
+import static com.nikolidakis.utils.Utils.md5;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-import java.util.Objects;
-
-import static com.nikolidakis.utils.Utils.keepTwoDecimalDigits;
-import static com.nikolidakis.utils.Utils.md5;
 
 @Entity
 @Table(name = "Users")
@@ -130,9 +139,9 @@ public class User {
         this.city = city;
         this.address = address;
         this.afm = afm;
-        this.bidderRating = keepTwoDecimalDigits(bidderRating);
+        this.bidderRating = keepOneDecimalDigits(bidderRating);
         this.bidderRatingVotes = bidderRatingVotes;
-        this.sellerRating = keepTwoDecimalDigits(sellerRating);
+        this.sellerRating = keepOneDecimalDigits(sellerRating);
         this.sellerRatingVotes = sellerRatingVotes;
     }
 
@@ -141,19 +150,23 @@ public class User {
     }
 
     public void setBidderRating(double bidderRating) {
-        this.bidderRating = keepTwoDecimalDigits(bidderRating);
+
+        this.bidderRating = keepOneDecimalDigits(bidderRating);
     }
 
     public void setSellerRating(double sellerRating) {
-        this.sellerRating = keepTwoDecimalDigits(sellerRating);
+
+        this.sellerRating = keepOneDecimalDigits(sellerRating);
     }
 
     public double getBidderRating() {
-        return keepTwoDecimalDigits(bidderRating);
+
+        return keepOneDecimalDigits(bidderRating);
     }
 
     public double getSellerRating() {
-        return keepTwoDecimalDigits(sellerRating);
+
+        return keepOneDecimalDigits(sellerRating);
     }
 
     @Override
